@@ -20,6 +20,7 @@
 
 # RStudio files
 .Rproj.user/
+.quarto/
 
 # produced vignettes
 vignettes/*.html
@@ -47,3 +48,9 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+#custom
+.DS_store
+scripts/reporting_tools.R
+README.qmd
+scripts/_rendering_script.R

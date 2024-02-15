@@ -1,0 +1,17 @@
+---
+title: "Estimating The Effect Of Adhering To Canada’s Food Guide 2019 Recommendations On Health Outcomes In Older Adults: A Target Trial Emulation Protocol"
+date: last-modified
+format: docx
+  # html:
+  #   theme: Journal
+  #   toc: true
+knitr:
+  opts_chunk: 
+    echo: false
+    message: false
+    warning: false
+table-of-contents: true
+code-fold: true
+#' title: Quarto document used to generate the text, figures and tables of the protocol
+#' run time: <1min
+---
