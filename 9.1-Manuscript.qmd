@@ -15,3 +15,154 @@ code-fold: true
 #' title: Quarto document used to generate the text, figures and tables of the protocol
 #' run time: <1min
 ---
+
+```{r setup}
+#| include: false
+
+print_table <- "N"
+
+# ********************************************** #
+#                 Quarto set-up                  #
+# ********************************************** #
+
+knitr::opts_chunk$set(dpi = 300,
+                      out.width = "80%",
+                      fig.env = "figure",
+                      fig.align = "center"
+                      )
+
+## suppress scientific notation
+options(scipen = 9999)
+
+# *********************************************** #
+#                   Packages                      #
+# *********************************************** #
+
+## data
+library(dplyr)
+library(tidylog)
+library(readxl)
+
+## analysis
+library(hefi2019)
+
+## results presentation
+library(ggplot2)
+library(patchwork)
+library(gt)
+library(tinytex)
+library(MetBrewer)
+library(dagitty)
+library(ggdag)
+
+# ********************************************** #
+#               Location of files                #
+# ********************************************** #
+
+dir_scripts <- here::here("scripts")
+dir_processed <- here::here("data", "processed")
+dir_results <- here::here("data", "results")
+dir_tab <- here::here("manuscript", "tables")
+  if(dir.exists(dir_tab)==FALSE){
+    dir.create(dir_tab, recursive = TRUE)
+  }
+dir_fig <- here::here("manuscript", "figures")
+  if(dir.exists(dir_fig)==FALSE){
+    dir.create(dir_fig, recursive = TRUE)
+  }
+dir_supp <- here::here("manuscript", "supplementary")
+  if(dir.exists(dir_supp)==FALSE){
+    dir.create(dir_supp, recursive = TRUE)
+  }
+
+# ********************************************** #
+#            Load functions and data             #
+# ********************************************** #
+
+load(file.path(dir_processed, "dietsim_hefi.rdata"))
+
+
+## GT Table style
+  gtstyle <- function(gtobject,footnote_marker="numbers"){
+    gtobject |>
+      gt::tab_style(
+        style = list(
+          cell_text(weight = "bold")  ),
+        locations = cells_row_groups(groups = everything())
+      ) |>
+      gt::opt_align_table_header("left") |>
+      gt::opt_footnote_marks(marks=footnote_marker)
+  }
+
+```
+
+\newpage
+
+# Abstract
+
+```{r tbl-dietsim}
+#| label: tbl-dietsim
+#| tbl-cap: "Diet simulation"
+
+# ********************************************** #
+#          Generate table of sim. diet           #
+# ********************************************** #
+
+tab_dietsim <- 
+  dietsim_hefi |>
+  mutate(
+  #combine FAM+FAP
+    FAM_n_FAP = fam+fap,
+  # rescale as RA
+    milk_plantbev = milk_plantbev/258) |>
+  select(-c(drig,starts_with("HEFI2019C"),starts_with("RATIO"),
+            milk,plantbev,SFA_PERC,SUG_PERC,SODDEN,pro)) |>
+  gt::gt() |>
+  gt::cols_move_to_start(drig_f) |>
+  gt::tab_spanner(label="Foods, Reference Amounts (RA)",
+                  columns = c(vf,wg,pfpb,pfab, milk_plantbev, ufa)) |>
+  gt::tab_spanner(label="Total nutrients",
+                  columns = c(ekc,fsug, fas, FAM_n_FAP, sod)) |>
+  gt::fmt_number(columns = c(vf, wg, pfpb, pfab, milk_plantbev, ufa, fsug, fas, fam, fap, FAM_n_FAP, HEFI2019_TOTAL_SCORE),decimals = 1) |>
+  gt::fmt_number(columns = c(ekc, sod), decimals = 0) |>
+  gt::cols_hide(columns=c(totfoodsRA, fam, fap)) |>
+  gt::cols_label(
+    drig_f = "Age/sex group",
+    vf     = "Vegetables & fruits",
+    wg     = "Whole grains",
+    pfpb   = "Protein foods, plant-based",
+    pfab   = "Protein foods, animal-based",
+    milk_plantbev = "Milk & Plant-based bev. with protein",
+    ufa    = "Unsaturated oils & fats",
+    ekc    = "Energy, kcal",
+    fsug   = "Free sugars, g",
+    fas    = "SFA, g",
+    FAM_n_FAP = "Unsaturated fats, g",
+    #FAM    = "MUFA, g",FAP    = "PUFA, g",
+    sod    = "Sodium, mg",
+    HEFI2019_TOTAL_SCORE = "HEFI-2019 score (/80), points" ) |>
+  gt::tab_header(title="HEFI-2019 dietary constituents and score among simulated diets by Health Canada, by age/sex group") |>
+  gt::tab_footnote(footnote = "Data from Health Canada (2022). CFG-2019, Canada's Food Guide; DRI, Dietary Reference Intake; HEFI-2019, Healthy Eating Food Index 2019; RA, reference amounts; SFA, saturated fats.", locations = cells_title("title")) |>
+#  gt::tab_footnote(footnote = "Data from Health Canada. Simulated composite diets. https://open.canada.ca/data/en/dataset/0490749d-b0b0-410a-9577-a903c6cec2be: Open Government Portal, 2022. CFG-2019, Canada's Food Guide; DRI, Dietary Reference Intake; HEFI-2019, Healthy Eating Food Index 2019; RA, reference amounts; SFA, saturated fats.", locations = cells_title("title")) |>
+  gt::tab_footnote(footnote = glue::glue("The HEFI-2019 total score has a maximum of 80 points. Foods not recommended (i.e., {knitr::combine_words(notrecommended)}) were all assigned 0 consumption."),
+                   locations = cells_column_labels(columns="HEFI2019_TOTAL_SCORE") )
+
+# ********************************************** #
+#                  Print table                   #
+# ********************************************** #
+
+if(print_table=="Y") {
+  tab_dietsim |> gtstyle()
+}
+
+# ********************************************** #
+#                   Save table                   #
+# ********************************************** #
+
+gt::gtsave(tab_dietsim,
+           filename = file.path(dir_tab,"tab_dietsim.docx"))
+
+
+
+```
+
