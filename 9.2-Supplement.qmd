@@ -1,0 +1,236 @@
+---
+title: "Supplemental Material" 
+subtitle: "Estimating The Effect Of Adhering To Canada’s Food Guide 2019 Recommendations On Health Outcomes In Older Adults: A Target Trial Emulation Protocol"
+author:
+  - name: Didier Brassard
+    orcid: 0000-0002-7064-3066
+    email: didier.brassard@mcgill.ca
+    corresponding: false
+    affiliation:
+      - School of Human Nutrition, McGill University
+  - name: Nancy Presse
+    orcid: 0000-0002-5831-8666
+    email: Nancy.Presse@USherbrooke.ca
+    corresponding: false
+    affiliation:
+      - "Faculty of Medicine and Health Sciences, University of Sherbrooke"
+      - "Centre de recherche sur le vieillissement, CIUSSS de l'Estrie-CHUS"
+  - name: Stéphanie Chevalier
+    orcid: 0000-0002-8497-1570
+    email: stephanie.chevalier@mcgill.ca
+    corresponding: true
+    affiliation:
+      - School of Human Nutrition, McGill University
+      - Research Institute of the McGill University Health Centre
+date: last-modified
+format: #docx
+  html:
+    theme: Journal
+    toc: true
+reference-doc: manuscript/custom-ms.docx
+keywords: 
+  - older adults
+  - CFG
+  - Canada’s Food Guide
+  - Dietary intervention
+  - Dietary guidelines
+  - Target trial
+  - Target trial emulation
+  - Hypothetical trial
+knitr:
+  opts_chunk: 
+    echo: false
+    message: false
+    warning: false
+table-of-contents: true
+code-fold: true
+bibliography: manuscript/references/references.bib
+csl: manuscript/references/apnm.csl
+#' title: Quarto document used to generate the text, figures and tables of the protocol
+#' run time: <1min
+---
+
+```{r setup}
+#| include: false
+
+print_table <- "Y"
+
+# ********************************************** #
+#                 Quarto set-up                  #
+# ********************************************** #
+
+knitr::opts_chunk$set(dpi = 300,
+                      out.width = "80%",
+                      fig.env = "figure",
+                      fig.align = "center"
+                      )
+
+## suppress scientific notation
+options(scipen = 9999)
+
+# *********************************************** #
+#                   Packages                      #
+# *********************************************** #
+
+## data
+library(dplyr)
+library(tidylog)
+library(readxl)
+
+## analysis
+library(hefi2019)
+
+## results presentation
+library(ggplot2)
+library(patchwork)
+library(gt)
+library(tinytex)
+library(MetBrewer)
+library(dagitty)
+library(ggdag)
+
+# ********************************************** #
+#               Location of files                #
+# ********************************************** #
+
+dir_scripts <- here::here("scripts")
+dir_processed <- here::here("data", "processed")
+dir_results <- here::here("data", "results")
+dir_tab <- here::here("manuscript", "tables")
+  if(dir.exists(dir_tab)==FALSE){
+    dir.create(dir_tab, recursive = TRUE)
+  }
+dir_fig <- here::here("manuscript", "figures")
+  if(dir.exists(dir_fig)==FALSE){
+    dir.create(dir_fig, recursive = TRUE)
+  }
+dir_supp <- here::here("manuscript", "supplementary")
+  if(dir.exists(dir_supp)==FALSE){
+    dir.create(dir_supp, recursive = TRUE)
+  }
+
+# ********************************************** #
+#            Load functions and data             #
+# ********************************************** #
+
+## GT Table style
+  gtstyle <- function(gtobject,footnote_marker="numbers"){
+    gtobject |>
+      gt::tab_style(
+        style = list(
+          cell_text(weight = "bold")  ),
+        locations = cells_row_groups(groups = everything())
+      ) |>
+      gt::opt_align_table_header("left") |>
+      gt::opt_footnote_marks(marks=footnote_marker)
+  }
+
+```
+
+# Supplemental Methods
+
+## Simulated diets from Health Canada
+
+```{r tbl-dietsim}
+#| label: tbl-dietsim
+#| tbl-cap: "Diet simulation"
+
+# ********************************************** #
+#             Output sim. diet data              #
+# ********************************************** #
+
+# note: See code <1.0-Data_preparation.R> for details
+
+load(file.path(dir_processed, "dietsim_hefi.rdata"))
+
+# revise DRI group formatting
+dietsim_hefi$drig_f <- 
+  factor(dietsim_hefi$drig,
+         levels=c(0,12,13,14,15),
+         labels = c("All, 51y+",
+                    "Males, 51-70 y",
+                    "Females, 51-70 y",
+                    "Males 71y+",
+                    "Females 71y+"))
+
+# ********************************************** #
+#          Output vectors of CFG foods           #
+# ********************************************** #
+
+recommended <- c(
+  "vegetables and fruits",
+  "whole-grain foods",
+  "protein foods",
+  "unsweetened milk and plant-based beverages with protein"
+)
+
+notrecommended <- c(
+  "non-whole grain foods",
+  #"other foods not recommended",
+  "other low nutritive value foods",
+  #"other beverages not recommended",
+  "juice, sugary drinks and alcohol",
+  "fatty foods rich in saturated fats")
+
+# ********************************************** #
+#          Generate table of sim. diet           #
+# ********************************************** #
+
+tab_dietsim <- 
+  dietsim_hefi |>
+  mutate(
+  #combine FAM+FAP
+    FAM_n_FAP = fam+fap,
+  # rescale as RA
+    milk_plantbev = milk_plantbev/258) |>
+  select(-c(drig,starts_with("HEFI2019C"),starts_with("RATIO"),
+            milk,plantbev,SFA_PERC,SUG_PERC,SODDEN,pro)) |>
+  gt::gt() |>
+  gt::cols_move_to_start(drig_f) |>
+  gt::tab_spanner(label="Foods, Reference Amounts (RA)",
+                  columns = c(vf,wg,pfpb,pfab, milk_plantbev, ufa)) |>
+  gt::tab_spanner(label="Total nutrients",
+                  columns = c(ekc,fsug, fas, FAM_n_FAP, sod)) |>
+  gt::fmt_number(columns = c(vf, wg, pfpb, pfab, milk_plantbev, ufa, fsug, fas, fam, fap, FAM_n_FAP, HEFI2019_TOTAL_SCORE),decimals = 1) |>
+  gt::fmt_number(columns = c(ekc, sod), decimals = 0) |>
+  gt::cols_hide(columns=c(totfoodsRA, fam, fap)) |>
+  gt::cols_label(
+    drig_f = "Age/sex group",
+    vf     = "Vegetables & fruits",
+    wg     = "Whole grains",
+    pfpb   = "Protein foods, plant-based",
+    pfab   = "Protein foods, animal-based",
+    milk_plantbev = "Milk & Plant-based bev. with protein",
+    ufa    = "Unsaturated oils & fats",
+    ekc    = "Energy, kcal",
+    fsug   = "Free sugars, g",
+    fas    = "SFA, g",
+    FAM_n_FAP = "Unsaturated fats, g",
+    #FAM    = "MUFA, g",FAP    = "PUFA, g",
+    sod    = "Sodium, mg",
+    HEFI2019_TOTAL_SCORE = "HEFI-2019 score (/80), points" ) |>
+  gt::tab_header(title="HEFI-2019 dietary constituents and score among simulated diets by Health Canada, by age/sex group") |>
+  gt::tab_footnote(footnote = "Data adapted from Health Canada. Simulated composite diets. https://open.canada.ca/data/en/dataset/0490749d-b0b0-410a-9577-a903c6cec2be: Open Government Portal, 2022. CFG-2019, Canada's Food Guide; DRI, Dietary Reference Intake; HEFI-2019, Healthy Eating Food Index 2019; RA, reference amounts; SFA, saturated fats.", locations = cells_title("title")) |>
+  gt::tab_footnote(footnote = glue::glue("The HEFI-2019 total score has a maximum of 80 points. Foods not recommended (i.e., {knitr::combine_words(notrecommended)}) were all assigned 0 consumption."),
+                   locations = cells_column_labels(columns="HEFI2019_TOTAL_SCORE") )
+
+# ********************************************** #
+#                  Print table                   #
+# ********************************************** #
+
+if(print_table=="Y") {
+  tab_dietsim |> gtstyle()
+}
+
+# ********************************************** #
+#                   Save table                   #
+# ********************************************** #
+
+gt::gtsave(tab_dietsim,
+           filename = file.path(dir_supp,"tab_dietsim.docx"))
+
+
+
+```
+
+`r ifelse(print_table!="Y", "\n<**TABLE DIET SIMULATION GOES HERE>**\n", "")`
