@@ -131,9 +131,9 @@ dir_supp <- here::here("manuscript", "supplementary")
 
 ## Simulated diets from Health Canada
 
-```{r tbl-dietsim}
-#| label: tbl-dietsim
-#| tbl-cap: "Diet simulation"
+```{r table-dietsim}
+# #| label: tbl-dietsim
+# #| tbl-cap: ""
 
 # ********************************************** #
 #             Output sim. diet data              #
