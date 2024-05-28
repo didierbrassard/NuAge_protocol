@@ -54,3 +54,7 @@ rsconnect/
 scripts/reporting_tools.R
 README.qmd
 scripts/_rendering_script.R
+/submission/*
+/results/*
+
+/.quarto/
