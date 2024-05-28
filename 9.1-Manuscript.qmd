@@ -707,8 +707,6 @@ Contrary to dietary habits, data on physical activity habits before baseline wer
 
 A successful emulation of randomization requires that there is no unmeasured confounding. However, this is never guaranteed with observational data. Thus, we emphasize our assumptions that 1) the causal graph accurately depicts the relationship under study; and 2) the covariates included are a sufficient set of covariates to address confounding.
 
-\newpage
-
 ### Outcomes
 
 The primary outcomes will be the mean end of follow-up values for muscle strength (i.e., handgrip using vigorimeter, elbow flexor, knee extensor) and physical function (i.e., normal and fast walking, "timed up-and-go"). Outcome values were measured according to standardized protocol in NuAge [@gaudreau2007].
