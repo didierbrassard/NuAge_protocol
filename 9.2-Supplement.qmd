@@ -23,10 +23,7 @@ author:
       - School of Human Nutrition, McGill University
       - Research Institute of the McGill University Health Centre
 date: last-modified
-format: #docx
-  html:
-    theme: Journal
-    toc: true
+format: docx
 reference-doc: manuscript/custom-ms.docx
 keywords: 
   - older adults
@@ -42,11 +39,14 @@ knitr:
     echo: false
     message: false
     warning: false
-table-of-contents: true
+table-of-contents: false
 code-fold: true
+crossref:
+  fig-title: Supplemental Figure # (default is "Figure")
+  tbl-title: Supplemental Table  # (default is "Table")
 bibliography: manuscript/references/references.bib
 csl: manuscript/references/apnm.csl
-#' title: Quarto document used to generate the text, figures and tables of the protocol
+#' title: Quarto document used to generate the supplemental material of the protocol
 #' run time: <1min
 ---
 
@@ -209,7 +209,7 @@ tab_dietsim <-
     #FAM    = "MUFA, g",FAP    = "PUFA, g",
     sod    = "Sodium, mg",
     HEFI2019_TOTAL_SCORE = "HEFI-2019 score (/80), points" ) |>
-  gt::tab_header(title="HEFI-2019 dietary constituents and score among simulated diets by Health Canada, by age/sex group") |>
+  gt::tab_header(title="Supplemental Table 1. HEFI-2019 dietary constituents and score among simulated diets by Health Canada, by age and sex group") |>
   gt::tab_footnote(footnote = "Data adapted from Health Canada. Simulated composite diets. https://open.canada.ca/data/en/dataset/0490749d-b0b0-410a-9577-a903c6cec2be: Open Government Portal, 2022. CFG-2019, Canada's Food Guide; DRI, Dietary Reference Intake; HEFI-2019, Healthy Eating Food Index 2019; RA, reference amounts; SFA, saturated fats.", locations = cells_title("title")) |>
   gt::tab_footnote(footnote = glue::glue("The HEFI-2019 total score has a maximum of 80 points. Foods not recommended (i.e., {knitr::combine_words(notrecommended)}) were all assigned 0 consumption."),
                    locations = cells_column_labels(columns="HEFI2019_TOTAL_SCORE") )
