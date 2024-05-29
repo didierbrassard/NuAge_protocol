@@ -1,0 +1,1 @@
+This folder contains tables, figures, supplemental tables and figures and references required for generation of the main text. A basic word template for scientific manuscript is also included (`custom-ms.docx`).
