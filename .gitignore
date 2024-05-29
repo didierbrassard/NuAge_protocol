@@ -58,3 +58,4 @@ scripts/_rendering_script.R
 /results/*
 
 /.quarto/
+_table_poster.qmd
