@@ -25,6 +25,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -146,12 +180,16 @@ window.Quarto = {
 <span class="menu-text">READ ME</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./1.0-Data_preparation.html"> 
+<span class="menu-text">Data preparation</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link active" href="./9.1-Manuscript.html" aria-current="page"> 
 <span class="menu-text">Manuscript</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./9.2-Supplement.html"> 
-<span class="menu-text">Supplemental material</span></a>
+<span class="menu-text">Supplement</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./google.ca"> <i class="bi bi-database-fill" role="img">
@@ -325,24 +363,76 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="target-trial">Target trial</h2>
 <p>The first step of a target trial emulation is the description of the target trial, i.e., the protocol of the hypothetical randomized controlled trial we would like to conduct <span class="citation" data-cites="hernan2016a hernan2022">(<a href="#ref-hernan2016a" role="doc-biblioref">Hernan and Robins 2016</a>; <a href="#ref-hernan2022" role="doc-biblioref">Hernan et al. 2022</a>)</span>. <strong>Table 1</strong> presents the target trial and its emulation using observational data from the NuAge study. Key differences between the target trial and its emulation are that participants will be required to provide complete dietary assessment and covariate data at baseline (eligibility component); and that we will attempt to emulate the randomized assignment by adjusting for dietary intakes before baseline as well as baseline covariates (assignment component).</p>
 <div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># #| label: tbl-target</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># #| tbl-cap: "Target trial"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># *********************************************************************** #</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#               Generate table presenting the target trial                #</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># *********************************************************************** #</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>tab_targettrial <span class="ot">&lt;-</span> </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="fu">file.path</span>(dir_results,<span class="st">"Table_data.xlsx"</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sheet =</span> <span class="st">"targettrial"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_label</span>(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">component =</span> <span class="st">"Trial component"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">target  =</span> <span class="st">"Target trial specification"</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">emulation =</span> <span class="st">"Target trial emulation"</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_style</span>(</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">locations =</span> <span class="fu">cells_body</span>(<span class="at">columns=</span><span class="dv">1</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_style</span>(</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">list</span>(</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>)  ),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_column_labels</span>(<span class="at">columns=</span><span class="fu">everything</span>())</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_header</span>(</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>     <span class="at">title =</span> <span class="st">"Emulation of a dietary intervention target trial</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="st">     using observational data from the NuAge study"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">footnote =</span> <span class="st">"FFQ, food-frequency questionnaire; NuAge, Quebec Longitudinal Study on Nutrition and Successful Aging"</span>,</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_title</span>(<span class="st">"title"</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">footnote =</span> <span class="st">"See 'Dietary Strategies' for detailed intervention."</span>,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_body</span>(<span class="at">columns=</span><span class="st">"component"</span>,<span class="at">rows=</span><span class="dv">2</span>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">footnote =</span> <span class="st">"The observational analog of the intention-to-treat contrast corresponds to the baseline values of the intervention, which are both 'assigned' and initiated at the same time."</span>,</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_body</span>(<span class="at">columns=</span><span class="st">"component"</span>, <span class="at">rows=</span><span class="dv">6</span>)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co">#                  Print table                   #</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(print_table<span class="sc">==</span><span class="st">"Y"</span>) {</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>tab_targettrial <span class="sc">|&gt;</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gtstyle</span>()</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
-<div id="vmwflxirgu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#vmwflxirgu table {
+<div id="egbvaazsor" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#egbvaazsor table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#vmwflxirgu thead, #vmwflxirgu tbody, #vmwflxirgu tfoot, #vmwflxirgu tr, #vmwflxirgu td, #vmwflxirgu th {
+#egbvaazsor thead, #egbvaazsor tbody, #egbvaazsor tfoot, #egbvaazsor tr, #egbvaazsor td, #egbvaazsor th {
   border-style: none;
 }
 
-#vmwflxirgu p {
+#egbvaazsor p {
   margin: 0;
   padding: 0;
 }
 
-#vmwflxirgu .gt_table {
+#egbvaazsor .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -368,12 +458,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#vmwflxirgu .gt_caption {
+#egbvaazsor .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#vmwflxirgu .gt_title {
+#egbvaazsor .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -385,7 +475,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#vmwflxirgu .gt_subtitle {
+#egbvaazsor .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -397,7 +487,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#vmwflxirgu .gt_heading {
+#egbvaazsor .gt_heading {
   background-color: #FFFFFF;
   text-align: left;
   border-bottom-color: #FFFFFF;
@@ -409,13 +499,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#vmwflxirgu .gt_bottom_border {
+#egbvaazsor .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#vmwflxirgu .gt_col_headings {
+#egbvaazsor .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -430,7 +520,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#vmwflxirgu .gt_col_heading {
+#egbvaazsor .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -450,7 +540,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#vmwflxirgu .gt_column_spanner_outer {
+#egbvaazsor .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -462,15 +552,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#vmwflxirgu .gt_column_spanner_outer:first-child {
+#egbvaazsor .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#vmwflxirgu .gt_column_spanner_outer:last-child {
+#egbvaazsor .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#vmwflxirgu .gt_column_spanner {
+#egbvaazsor .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -482,11 +572,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#vmwflxirgu .gt_spanner_row {
+#egbvaazsor .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#vmwflxirgu .gt_group_heading {
+#egbvaazsor .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -512,7 +602,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#vmwflxirgu .gt_empty_group_heading {
+#egbvaazsor .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -527,15 +617,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#vmwflxirgu .gt_from_md > :first-child {
+#egbvaazsor .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#vmwflxirgu .gt_from_md > :last-child {
+#egbvaazsor .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#vmwflxirgu .gt_row {
+#egbvaazsor .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -554,7 +644,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#vmwflxirgu .gt_stub {
+#egbvaazsor .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -567,7 +657,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#vmwflxirgu .gt_stub_row_group {
+#egbvaazsor .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -581,15 +671,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#vmwflxirgu .gt_row_group_first td {
+#egbvaazsor .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#vmwflxirgu .gt_row_group_first th {
+#egbvaazsor .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#vmwflxirgu .gt_summary_row {
+#egbvaazsor .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -599,16 +689,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#vmwflxirgu .gt_first_summary_row {
+#egbvaazsor .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#vmwflxirgu .gt_first_summary_row.thick {
+#egbvaazsor .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#vmwflxirgu .gt_last_summary_row {
+#egbvaazsor .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -618,7 +708,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#vmwflxirgu .gt_grand_summary_row {
+#egbvaazsor .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -628,7 +718,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#vmwflxirgu .gt_first_grand_summary_row {
+#egbvaazsor .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -638,7 +728,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#vmwflxirgu .gt_last_grand_summary_row_top {
+#egbvaazsor .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -648,11 +738,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#vmwflxirgu .gt_striped {
+#egbvaazsor .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#vmwflxirgu .gt_table_body {
+#egbvaazsor .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -661,7 +751,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#vmwflxirgu .gt_footnotes {
+#egbvaazsor .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -675,7 +765,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#vmwflxirgu .gt_footnote {
+#egbvaazsor .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -684,7 +774,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#vmwflxirgu .gt_sourcenotes {
+#egbvaazsor .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -698,7 +788,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#vmwflxirgu .gt_sourcenote {
+#egbvaazsor .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -706,63 +796,63 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#vmwflxirgu .gt_left {
+#egbvaazsor .gt_left {
   text-align: left;
 }
 
-#vmwflxirgu .gt_center {
+#egbvaazsor .gt_center {
   text-align: center;
 }
 
-#vmwflxirgu .gt_right {
+#egbvaazsor .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#vmwflxirgu .gt_font_normal {
+#egbvaazsor .gt_font_normal {
   font-weight: normal;
 }
 
-#vmwflxirgu .gt_font_bold {
+#egbvaazsor .gt_font_bold {
   font-weight: bold;
 }
 
-#vmwflxirgu .gt_font_italic {
+#egbvaazsor .gt_font_italic {
   font-style: italic;
 }
 
-#vmwflxirgu .gt_super {
+#egbvaazsor .gt_super {
   font-size: 65%;
 }
 
-#vmwflxirgu .gt_footnote_marks {
+#egbvaazsor .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#vmwflxirgu .gt_asterisk {
+#egbvaazsor .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#vmwflxirgu .gt_indent_1 {
+#egbvaazsor .gt_indent_1 {
   text-indent: 5px;
 }
 
-#vmwflxirgu .gt_indent_2 {
+#egbvaazsor .gt_indent_2 {
   text-indent: 10px;
 }
 
-#vmwflxirgu .gt_indent_3 {
+#egbvaazsor .gt_indent_3 {
   text-indent: 15px;
 }
 
-#vmwflxirgu .gt_indent_4 {
+#egbvaazsor .gt_indent_4 {
   text-indent: 20px;
 }
 
-#vmwflxirgu .gt_indent_5 {
+#egbvaazsor .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -830,6 +920,15 @@ window.Quarto = {
 
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                   Save table                   #</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>gt<span class="sc">::</span><span class="fu">gtsave</span>(tab_targettrial,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">filename =</span> <span class="fu">file.path</span>(dir_tab,<span class="st">"tab_targettrial.docx"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Each part of the target trial and its emulation are described below.</p>
 <section id="eligibility-criteria" class="level3">
@@ -853,6 +952,35 @@ window.Quarto = {
 </section>
 <section id="diet-simulations" class="level4">
 <h4 class="anchored" data-anchor-id="diet-simulations">Diet Simulations</h4>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#             Output sim. diet data              #</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># note: loading done in set-up chunk. See code &lt;1.0-Data_preparation.R&gt; for details</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#          Output vectors of CFG foods           #</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>recommended <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"vegetables and fruits"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"whole-grain foods"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"protein foods"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"unsweetened milk and plant-based beverages with protein"</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>notrecommended <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"non-whole grain foods"</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">#"other foods not recommended",</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"other low nutritive value foods"</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">#"other beverages not recommended",</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"juice, sugary drinks and alcohol"</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"fatty foods rich in saturated fats"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <p>For the present study, adherence to CFG’s recommendations was defined based on simulated diets generated by Health Canada <span class="citation" data-cites="healthcanada2022">(<a href="#ref-healthcanada2022" role="doc-biblioref">Health Canada 2022</a>)</span> and summarized in <strong>Supplemental Table 1</strong>. The simulated diets were designed to meet both CFG’s recommendations on healthy food choices and nutrient requirements (Dietary Reference Intake).</p>
 <p>These diets achieve near perfect Healthy Eating Food Index (HEFI)-2019 scores (&gt;78/80) through relatively high intakes of recommended foods (i.e., vegetables and fruits, whole-grain foods, protein foods, and unsweetened milk and plant-based beverages with protein) and null intakes of foods not recommended (i.e., non-whole grain foods, other low nutritive value foods, juice, sugary drinks and alcohol, and fatty foods rich in saturated fats). The HEFI-2019 score indicates the extent to which dietary intakes are consistent with CFG’s recommendations on healthy food choices <span class="citation" data-cites="brassard2022a brassard2022b">(<a href="#ref-brassard2022a" role="doc-biblioref">Brassard et al. 2022b</a>, <a href="#ref-brassard2022b" role="doc-biblioref">2022a</a>)</span>.</p>
 <p>Note that the HEFI-2019 could have been used as main exposure to measure adherence to CFG. However, the use of a composite score metric would not fully satisfy the criterion of a well-defined intervention to estimate a causal effect. First, high HEFI-2019 scores, and high adherence to CFG’s recommendations, can be achieved through many different strategies or dietary patterns. In the context of observational data, the specific strategies through which individuals achieve high HEFI-2019 score would be based on dietary habits and patterns self-selected by the participants. This approach is similar to asking hypothetical trial participants to modify their intakes without clearly indicating how, which would obscure the causal effect estimated. Second, the HEFI-2019 score includes recommendations both on foods and on nutrients. As described above, mixing servings and grams in a statistical models may cause poor estimation of causal effects <span class="citation" data-cites="tomova2022b">(<a href="#ref-tomova2022b" role="doc-biblioref">Tomova et al. 2022a</a>)</span>.</p>
@@ -869,24 +997,157 @@ window.Quarto = {
 <p>In the emulation, the substitution will be implemented by including “total intakes” as a covariate and leaving out foods not recommended from the model. In this approach to account for “total energy”, all model coefficients reflect the action of increasing intakes of recommended foods and a concomitant decrease in <em>any</em> of the foods not recommended <span class="citation" data-cites="kipnis1993">(<a href="#ref-kipnis1993" role="doc-biblioref">Kipnis et al. 1993</a>)</span>. On the one hand, this approach is potentially confusing <span class="citation" data-cites="tomova2022a tomova2022b">(<a href="#ref-tomova2022a" role="doc-biblioref">Tomova et al. 2022b</a>, <a href="#ref-tomova2022b" role="doc-biblioref">2022a</a>)</span>, since the default interpretation of model coefficients is the action of increasing the intake of each <strong>food included in the model</strong>, while decreasing the intake of foods <strong>not in the model</strong> <span class="citation" data-cites="kipnis1993">(<a href="#ref-kipnis1993" role="doc-biblioref">Kipnis et al. 1993</a>)</span>. On the other hand, the standard model is generally consistent with the implementation of dietary intervention in feeding trials <span class="citation" data-cites="willett2013 tobias2022 willett2022">(<a href="#ref-willett2013" role="doc-biblioref">Willett 2013</a>; <a href="#ref-tobias2022" role="doc-biblioref">Tobias 2022</a>; <a href="#ref-willett2022" role="doc-biblioref">Willett et al. 2022</a>)</span>. The standard model also reduces the number of variables to be considered as intervention variables. Otherwise, 4 additional dietary components would have to be modelled for foods not recommended (i.e., non-whole grain foods, other low nutritive value foods, juice, sugary drinks and alcohol, and fatty foods rich in saturated fats). Finally, the explicit description of the intervention strategies in the target trial protocol clarifies the estimand of interest, as done previously <span class="citation" data-cites="chiu2021 chiu2022">(<a href="#ref-chiu2021" role="doc-biblioref">Chiu et al. 2021</a>; <a href="#ref-chiu2022" role="doc-biblioref">Chiu 2022</a>)</span>. Of note, nutrient-based recommendations in CFG (i.e, saturated fats, free sugars and sodium) are not explicitly modelled to avoid the problems associated with mixed-unit models <span class="citation" data-cites="tomova2022b">(<a href="#ref-tomova2022b" role="doc-biblioref">Tomova et al. 2022a</a>)</span>. In the target trial, we assume that nutrient-based targets would be met by reducing consumption of foods not recommended (i.e., non-whole grain foods, other low nutritive value foods, juice, sugary drinks and alcohol, and fatty foods rich in saturated fats). In that regard, food-level substitution analyses in Canadians support this assumption for saturated fats <span class="citation" data-cites="harrison2021 harrison2022">(<a href="#ref-harrison2021" role="doc-biblioref">Harrison et al. 2021</a>, <a href="#ref-harrison2022" role="doc-biblioref">2022</a>)</span>.</p>
 <div style="page-break-after: always;"></div>
 <div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># #| label: tbl-dietint</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># #| tbl-cap: "Diet intervention"</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># *********************************************************************** #</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#                Generate table presenting interventions                  #</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># *********************************************************************** #</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     CFG reformulation intervention values      #</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>pfab_int <span class="ot">&lt;-</span> <span class="fl">1.5</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>pfpb_int <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>milk_int <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#             Full intervention data             #</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>data_dietint <span class="ot">&lt;-</span> </span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="fu">file.path</span>(dir_results,<span class="st">"Table_data.xlsx"</span>),</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sheet =</span> <span class="st">"dietint"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Indicate values that are unchanged by intervention</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Animal-based protein intervention</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">pfab =</span> <span class="fu">ifelse</span>(int<span class="sc">&gt;</span><span class="dv">2</span>, pfab<span class="sc">+</span>pfab_int, pfab),</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Plant-based protein intervention</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">pfpb =</span> <span class="fu">ifelse</span>(int<span class="sc">&gt;</span><span class="dv">2</span>, pfpb<span class="sc">+</span>pfpb_int, pfpb),</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Milk and pant beverages with sufficient protein</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">milk_plantbev =</span> <span class="fu">ifelse</span>(int<span class="sc">&gt;</span><span class="dv">2</span>, milk_plantbev<span class="sc">+</span>milk_int, milk_plantbev),</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="do">## add labels and common values</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">dietsuppl =</span> <span class="fu">ifelse</span>(int<span class="sc">&gt;</span><span class="dv">1</span>, <span class="st">"No change"</span>,dietsuppl),</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">exercise  =</span> <span class="fu">ifelse</span>(int<span class="sc">&gt;</span><span class="dv">1</span> <span class="sc">&amp;</span> int<span class="sc">!=</span><span class="dv">4</span>, <span class="st">"No change"</span>,exercise),</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">c</span>(<span class="st">"otherfoods"</span>, <span class="st">"otherbev"</span>, <span class="st">"rg"</span>),</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>           <span class="cf">function</span>(x) <span class="fu">ifelse</span>(int<span class="sc">&gt;</span><span class="dv">1</span> <span class="sc">&amp;</span> <span class="fu">is.na</span>(x),<span class="st">"Minimum"</span>,x))</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co"># add factor for clean labels</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>data_dietint<span class="sc">$</span>drig_f <span class="ot">&lt;-</span> </span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">factor</span>(data_dietint<span class="sc">$</span>drig,</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>         <span class="at">levels=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">12</span>,<span class="dv">13</span>,<span class="dv">14</span>,<span class="dv">15</span>),</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>         <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"All, 51y+"</span>,</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Males, 67-70 y"</span>,</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Females, 67-70 y"</span>,</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Males"</span>,</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Females"</span>))</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>data_dietint<span class="sc">$</span>int_f <span class="ot">&lt;-</span> </span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">factor</span>(data_dietint<span class="sc">$</span>int,</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>         <span class="at">levels=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>),</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>         <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"1. Control (no change)"</span>,</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"2. Adhering to Canada's Food Guide 2019 recommendations on healthy food choices"</span>,</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"3. Same as 2 + extra protein"</span>,</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"4. Same as 3 + physical activity"</span>))</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="co">#                 Generate table                 #</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>tab_dietint <span class="ot">&lt;-</span> </span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>  data_dietint <span class="sc">|&gt;</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(int_f) <span class="sc">|&gt;</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_move_to_start</span>(<span class="at">columns=</span><span class="fu">c</span>(int_f,drig_f)) <span class="sc">|&gt;</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_move_to_end</span>(<span class="at">columns=</span><span class="fu">c</span>(exercise)) <span class="sc">|&gt;</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_hide</span>(<span class="at">columns =</span> <span class="fu">c</span>(drig,int)) <span class="sc">|&gt;</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_spanner</span>(<span class="at">label=</span><span class="st">"Recommended foods, RA/day"</span>,</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>                  <span class="at">columns =</span> <span class="fu">c</span>(vf,wg,pfpb,pfab, milk_plantbev, ufa)) <span class="sc">|&gt;</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_spanner</span>(<span class="at">label=</span><span class="st">"Foods and beverages not recommended, RA/day"</span>,</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>                  <span class="at">columns =</span> <span class="fu">c</span>(otherfoods, otherbev, rg)) <span class="sc">|&gt;</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_label</span>(</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">int    =</span> <span class="st">"Intervention"</span>,</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">drig_f =</span> <span class="st">"Sex"</span>,</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">vf     =</span> <span class="st">"Vegetables &amp; fruits"</span>,</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">wg     =</span> <span class="st">"Whole grains"</span>,</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>    <span class="at">pfpb   =</span> <span class="st">"Protein foods, plant-based"</span>,</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">pfab   =</span> <span class="st">"Protein foods, animal-based"</span>,</span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">milk_plantbev =</span> <span class="st">"Milk &amp; Plant-based bev. with protein"</span>,</span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">ufa    =</span> <span class="st">"Unsaturated oils &amp; fats"</span>,</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">dietsuppl =</span> <span class="st">"Dietary supplement"</span>,</span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">otherfoods =</span> <span class="st">"Other foods"</span>,</span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>    <span class="at">otherbev =</span> <span class="st">"Sugary drinks, alcohol"</span>,</span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">rg       =</span> <span class="st">"Non-whole grains"</span>,</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">exercise =</span> <span class="st">"Physical activity, minutes/day"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">sub_missing</span>(<span class="at">missing_text =</span><span class="st">"-"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_header</span>(</span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>     <span class="at">title =</span> <span class="st">"Hypothetical diet and exercise interventions emulated in the NuAge cohort study, by sex"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">footnote =</span> <span class="st">"CFG, Canada's Food Guide; NA, not available; NuAge, Quebec Longitudinal Study on Nutrition and Successful Aging; RA, reference amount; y, year"</span>,</span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_title</span>(<span class="st">"title"</span>)</span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Indicate what are 'control' values</span></span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">footnote =</span> <span class="st">"Values are averages observed at baseline in the NuAge cohort. In other words, values are the observed intakes for the food categories or amount of physical activity when no change is applied."</span>,</span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_row_groups</span>(<span class="at">groups =</span> <span class="fu">attributes</span>(data_dietint<span class="sc">$</span>int_f)<span class="sc">$</span>levels[<span class="dv">1</span>])</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Indicate what are 'CFG adherence' values</span></span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">footnote =</span> <span class="st">"Values are derived from Health Canada's simulated composite diets of adults 71 years or older. Participants would be expected to meet these targets for each food categories. The specific food choices within these categories would be at the participants' discretion. Values for vegetables and fruits, whole-grain foods and plant-based protein foods were truncated to correspond, at most, to the 90th percentile of the distribution of usual intakes among Canadians aged 65 years in 2015."</span>,</span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_row_groups</span>(<span class="at">groups =</span> <span class="fu">attributes</span>(data_dietint<span class="sc">$</span>int_f)<span class="sc">$</span>levels[<span class="dv">2</span>])</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Indicate what is the extra protein treatment</span></span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>    <span class="at">footnote =</span> glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"Extra protein foods were added as follows: +{pfpb_int} RA of plant-based protein foods (e.g., {pfpb_int*50} grams of nuts), +{pfab_int} RA of animal-based protein foods (e.g., {pfab_int*100} grams of cooked unprocessed red meat, fish or poultry or {round(pfab_int*100/50)} small eggs), +{milk_int} RA of milk or plant-based beverage with protein (e.g., {milk_int*250} ml of milk or plant-based beverages with sufficient protein)."</span>),</span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_row_groups</span>(<span class="at">groups =</span> <span class="fu">attributes</span>(data_dietint<span class="sc">$</span>int_f)<span class="sc">$</span>levels[<span class="dv">3</span>])</span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Indicate meaning of dietary supplement column</span></span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>    <span class="at">footnote =</span> <span class="st">"Dietary supplements were not intervened on, but were nonetheless excluded from foods and beverages not recommended to avoid being considered in the substitution. In other words, participants would be not be instructed to modify their dietary supplements in the hypothetical trial."</span>,</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_column_labels</span>(<span class="at">columns=</span><span class="st">"dietsuppl"</span>)</span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Describe exercise</span></span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>    <span class="at">footnote =</span> <span class="st">"Physical activity corresponds to aerobic exercise of moderate intensity or higher (Bauer et al. 2013)."</span>,</span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations=</span><span class="fu">cells_column_labels</span>(<span class="at">columns=</span><span class="st">"exercise"</span>)</span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Indicate what are 'Minimum' values</span></span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a>    <span class="at">footnote =</span> <span class="st">"Minimum indicates that consumption would be set at the smallest amount permitting a concomitant increase in recommended foods to meet Canada's Food Guide targets. Portions for foods not recommended may vary on an individual basis."</span>,</span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_column_spanners</span>(<span class="at">spanners=</span><span class="st">"Foods and beverages not recommended, RA/day"</span>)</span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a>    <span class="co">#cells_body(columns=c("otherfoods":"rg"),rows=3:nrow(data_dietint) )</span></span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a>    ) </span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a><span class="co">#                  Print table                   #</span></span>
+<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(print_table<span class="sc">==</span><span class="st">"Y"</span>) {</span>
+<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a>  tab_dietint <span class="sc">|&gt;</span> <span class="fu">gtstyle</span>()</span>
+<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
-<div id="mgpciimqet" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#mgpciimqet table {
+<div id="uxaqxeuehj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#uxaqxeuehj table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#mgpciimqet thead, #mgpciimqet tbody, #mgpciimqet tfoot, #mgpciimqet tr, #mgpciimqet td, #mgpciimqet th {
+#uxaqxeuehj thead, #uxaqxeuehj tbody, #uxaqxeuehj tfoot, #uxaqxeuehj tr, #uxaqxeuehj td, #uxaqxeuehj th {
   border-style: none;
 }
 
-#mgpciimqet p {
+#uxaqxeuehj p {
   margin: 0;
   padding: 0;
 }
 
-#mgpciimqet .gt_table {
+#uxaqxeuehj .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -912,12 +1173,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#mgpciimqet .gt_caption {
+#uxaqxeuehj .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#mgpciimqet .gt_title {
+#uxaqxeuehj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -929,7 +1190,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#mgpciimqet .gt_subtitle {
+#uxaqxeuehj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -941,7 +1202,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#mgpciimqet .gt_heading {
+#uxaqxeuehj .gt_heading {
   background-color: #FFFFFF;
   text-align: left;
   border-bottom-color: #FFFFFF;
@@ -953,13 +1214,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#mgpciimqet .gt_bottom_border {
+#uxaqxeuehj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#mgpciimqet .gt_col_headings {
+#uxaqxeuehj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -974,7 +1235,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#mgpciimqet .gt_col_heading {
+#uxaqxeuehj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -994,7 +1255,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#mgpciimqet .gt_column_spanner_outer {
+#uxaqxeuehj .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1006,15 +1267,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#mgpciimqet .gt_column_spanner_outer:first-child {
+#uxaqxeuehj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#mgpciimqet .gt_column_spanner_outer:last-child {
+#uxaqxeuehj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#mgpciimqet .gt_column_spanner {
+#uxaqxeuehj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1026,11 +1287,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#mgpciimqet .gt_spanner_row {
+#uxaqxeuehj .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#mgpciimqet .gt_group_heading {
+#uxaqxeuehj .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1056,7 +1317,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#mgpciimqet .gt_empty_group_heading {
+#uxaqxeuehj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1071,15 +1332,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#mgpciimqet .gt_from_md > :first-child {
+#uxaqxeuehj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#mgpciimqet .gt_from_md > :last-child {
+#uxaqxeuehj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#mgpciimqet .gt_row {
+#uxaqxeuehj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1098,7 +1359,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#mgpciimqet .gt_stub {
+#uxaqxeuehj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1111,7 +1372,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#mgpciimqet .gt_stub_row_group {
+#uxaqxeuehj .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1125,15 +1386,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#mgpciimqet .gt_row_group_first td {
+#uxaqxeuehj .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#mgpciimqet .gt_row_group_first th {
+#uxaqxeuehj .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#mgpciimqet .gt_summary_row {
+#uxaqxeuehj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1143,16 +1404,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#mgpciimqet .gt_first_summary_row {
+#uxaqxeuehj .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#mgpciimqet .gt_first_summary_row.thick {
+#uxaqxeuehj .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#mgpciimqet .gt_last_summary_row {
+#uxaqxeuehj .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1162,7 +1423,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#mgpciimqet .gt_grand_summary_row {
+#uxaqxeuehj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1172,7 +1433,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#mgpciimqet .gt_first_grand_summary_row {
+#uxaqxeuehj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1182,7 +1443,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#mgpciimqet .gt_last_grand_summary_row_top {
+#uxaqxeuehj .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1192,11 +1453,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#mgpciimqet .gt_striped {
+#uxaqxeuehj .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#mgpciimqet .gt_table_body {
+#uxaqxeuehj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1205,7 +1466,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#mgpciimqet .gt_footnotes {
+#uxaqxeuehj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1219,7 +1480,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#mgpciimqet .gt_footnote {
+#uxaqxeuehj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1228,7 +1489,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#mgpciimqet .gt_sourcenotes {
+#uxaqxeuehj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1242,7 +1503,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#mgpciimqet .gt_sourcenote {
+#uxaqxeuehj .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1250,63 +1511,63 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#mgpciimqet .gt_left {
+#uxaqxeuehj .gt_left {
   text-align: left;
 }
 
-#mgpciimqet .gt_center {
+#uxaqxeuehj .gt_center {
   text-align: center;
 }
 
-#mgpciimqet .gt_right {
+#uxaqxeuehj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#mgpciimqet .gt_font_normal {
+#uxaqxeuehj .gt_font_normal {
   font-weight: normal;
 }
 
-#mgpciimqet .gt_font_bold {
+#uxaqxeuehj .gt_font_bold {
   font-weight: bold;
 }
 
-#mgpciimqet .gt_font_italic {
+#uxaqxeuehj .gt_font_italic {
   font-style: italic;
 }
 
-#mgpciimqet .gt_super {
+#uxaqxeuehj .gt_super {
   font-size: 65%;
 }
 
-#mgpciimqet .gt_footnote_marks {
+#uxaqxeuehj .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#mgpciimqet .gt_asterisk {
+#uxaqxeuehj .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#mgpciimqet .gt_indent_1 {
+#uxaqxeuehj .gt_indent_1 {
   text-indent: 5px;
 }
 
-#mgpciimqet .gt_indent_2 {
+#uxaqxeuehj .gt_indent_2 {
   text-indent: 10px;
 }
 
-#mgpciimqet .gt_indent_3 {
+#uxaqxeuehj .gt_indent_3 {
   text-indent: 15px;
 }
 
-#mgpciimqet .gt_indent_4 {
+#uxaqxeuehj .gt_indent_4 {
   text-indent: 20px;
 }
 
-#mgpciimqet .gt_indent_5 {
+#uxaqxeuehj .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1488,6 +1749,15 @@ window.Quarto = {
 
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                   Save table                   #</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>gt<span class="sc">::</span><span class="fu">gtsave</span>(tab_dietint,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">filename =</span> <span class="fu">file.path</span>(dir_tab,<span class="st">"tab_dietint.docx"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>The “additional protein” intervention consists of increasing the intake of both animal-based and plant-based protein foods by 1.5 and 0.5 RA per day, respectively, as well as milk and plant-based beverages with sufficient protein by 0.5 RA per day. In terms of amount of food, this corresponds to adding 150 grams of cooked unprocessed red meat, fish or poultry or 3 small eggs, 25 grams of nuts and seeds and 125 ml of milk or plant-based beverages with sufficient protein, while proportionally decreasing the intake of foods not recommended. In a previous RCT <span class="citation" data-cites="daly2014">(<a href="#ref-daly2014" role="doc-biblioref">Daly et al. 2014</a>)</span>, older women aged 60 to 90 years were able to consume an additional 160 grams of cooked lean red meat without substitution, hereby supporting the feasibility of the protein intervention in the present hypothetical study.</p>
 <div style="page-break-after: always;"></div>
