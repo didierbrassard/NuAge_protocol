@@ -56,5 +56,6 @@ README.qmd
 scripts/_rendering_script.R
 /submission/*
 /results/*
+
 /.quarto/
-/_manuscript
+_table_poster.qmd
