@@ -22,10 +22,10 @@ author:
       - School of Human Nutrition, McGill University
       - Research Institute of the McGill University Health Centre
 date: last-modified
-format: docx
-  # html:
-  #   theme: Journal
-  #   toc: true
+format: #docx
+  html:
+    theme: Journal
+    toc: true
 reference-doc: manuscript/custom-ms.docx
 keywords: 
   - older adults
