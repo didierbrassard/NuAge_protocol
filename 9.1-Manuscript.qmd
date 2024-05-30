@@ -851,17 +851,17 @@ dag_one_tf <-
 #                Save as png/pdf                 #
 # ********************************************** #
   
-    ggplot2::ggsave(file.path(dir_fig,"dag_1t.pdf"),
+    ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t.pdf"),
         plot=dag_one_tf, dpi=300, width=8,height=4.5, units="in",scale=0.85,device = cairo_pdf)
 
-  ggplot2::ggsave(file.path(dir_fig,"dag_1t.png"),
+  ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t.png"),
          plot=dag_one_tf, dpi=300, width=8,height=4.5, units="in",scale=0.85)
 
 # ********************************************** #
 #              Load rendered figure              #
 # ********************************************** #
   
-  knitr::include_graphics(file.path(dir_fig,"dag_1t.png"))
+  knitr::include_graphics(file.path(dir_fig,"fig_dag_1t.png"))
 
 ```
 
