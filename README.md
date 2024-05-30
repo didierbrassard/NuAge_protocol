@@ -1,8 +1,9 @@
 # README
 Didier Brassard
-2024-05-28
+2024-05-30
 
 - [Introduction](#introduction)
+- [Quick links](#quick-links)
 - [Codes](#codes)
 - [Acknowledgement](#acknowledgement)
 - [References](#references)
@@ -15,12 +16,21 @@ This repository includes the material to reproduce the manuscript of:
 Recommendations On Health Outcomes In Older Adults: A Target Trial
 Emulation Protocol*
 
-The raw data used for this project were obtained from Health Canada
-(2022).
+The raw data used for this project were obtained from [Health Canada
+(2022)](https://open.canada.ca/data/en/info/0490749d-b0b0-410a-9577-a903c6cec2be).
+
+# Quick links
+
+- [**medRxiv**: Pre-print version of the
+  study](https://doi.org/10.1101/2024.05.29.24308054)
+- [**GitHub**: Main article (code, text, figures and
+  tables)](https://didierbrassard.github.io/NuAge_protocol/9.1-Manuscript.html)
+- [**GitHub**: Supplemental
+  material](https://didierbrassard.github.io/NuAge_protocol/9.2-Supplement.html)
 
 # Codes
 
-<div id="whloeomirm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="zbbtribnaj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
   &#10;  
 
 | Description of R and QMD codes |                                                                                 |        |                                     |
@@ -72,7 +82,7 @@ Open Government Portal.
 Expand for details
 </summary>
 
-    [1] "2024-05-28 16:35:47 EDT"
+    [1] "2024-05-30 11:59:40 EDT"
 
     R version 4.3.1 (2023-06-16)
     Platform: x86_64-apple-darwin20 (64-bit)
