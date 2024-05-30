@@ -14,16 +14,10 @@ website:
       file: 9.1-Manuscript.qmd
     - text: "Supplemental material"
       file: 9.2-Supplement.qmd
-    - icon: database-fill
-      text: Access data
-      href: google.ca
     right:
     - icon: envelope
       text: Email
       href: "mailto:didier.brassard@mcgill.ca"
-    - icon: twitter
-      text: Twitter
-      href: https://twitter.com/didier_dtp
 
 format:
   html: 
