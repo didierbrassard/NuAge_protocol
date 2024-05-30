@@ -10,9 +10,11 @@ website:
     left:
     - text: "READ ME"
       href: "https://github.com/didierbrassard/NuAge_protocol/blob/main/README.md"
+    - text: "Data preparation"
+      file: 1.0-Data_preparation.R
     - text: "Manuscript"
       file: 9.1-Manuscript.qmd
-    - text: "Supplemental material"
+    - text: "Supplement"
       file: 9.2-Supplement.qmd
     right:
     - icon: envelope

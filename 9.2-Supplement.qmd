@@ -39,7 +39,7 @@ keywords:
   - Hypothetical trial
 knitr:
   opts_chunk: 
-    echo: false
+    echo: true
     message: false
     warning: false
 table-of-contents: false
