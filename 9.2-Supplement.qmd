@@ -1,6 +1,6 @@
 ---
-title: "Supplemental Material" 
-subtitle: "Estimating The Effect Of Adhering To Canada’s Food Guide 2019 Recommendations On Health Outcomes In Older Adults: A Target Trial Emulation Protocol"
+title: "Estimating The Effect Of Adhering To Canada’s Food Guide 2019 Recommendations On Health Outcomes In Older Adults: A Target Trial Emulation Protocol"
+subtitle: "Supplemental Material" 
 author:
   - name: Didier Brassard
     orcid: 0000-0002-7064-3066
@@ -28,15 +28,6 @@ format: #docx
     theme: Journal
     toc: true
 reference-doc: manuscript/custom-ms.docx
-keywords: 
-  - older adults
-  - CFG
-  - Canada’s Food Guide
-  - Dietary intervention
-  - Dietary guidelines
-  - Target trial
-  - Target trial emulation
-  - Hypothetical trial
 knitr:
   opts_chunk: 
     echo: true
@@ -54,7 +45,7 @@ csl: manuscript/references/apnm.csl
 ---
 
 ```{r setup}
-#| include: false
+#| include: true
 
 print_table <- "Y"
 

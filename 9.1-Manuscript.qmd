@@ -1,5 +1,6 @@
 ---
 title: "Estimating The Effect Of Adhering To Canada’s Food Guide 2019 Recommendations On Health Outcomes In Older Adults: A Target Trial Emulation Protocol"
+subtitle: "Manuscript"
 author:
   - name: Didier Brassard
     orcid: 0000-0002-7064-3066
@@ -52,7 +53,7 @@ csl: manuscript/references/apnm.csl
 ---
 
 ```{r setup}
-#| include: false
+#| include: true
 
 print_table <- "Y"
 
@@ -294,9 +295,7 @@ recommended <- c(
 
 notrecommended <- c(
   "non-whole grain foods",
-  #"other foods not recommended",
   "other low nutritive value foods",
-  #"other beverages not recommended",
   "juice, sugary drinks and alcohol",
   "fatty foods rich in saturated fats")
 
@@ -484,7 +483,7 @@ Covariates include age at baseline, biological sex, region, education, living al
 -   $X$, (time-varying) treatment: diet and physical activity habits
 -   $Y$, end of follow-up outcome: muscle health, general health, cognitive health.
 
-```{r fig-dag-rand, echo=FALSE}
+```{r fig-dag-rand}
 #| label: fig-dag-rand
 #| fig-cap: "Causal directed acyclic graph (DAG) depicting confounding (A) and successful emulation of randomization using g methods (B) at baseline between the intervention strategy (X) and outcome (Y). Baseline covariates (both time-invariant [Z] and time-varying [L]) as well as prior diet and physical activity habits (P) must be considered to emulate randomization. The successful emulation of randomization of the lifestyle intervention strategy requires no unmeasured confounders and no residual confounding. Time-varying treatment and covariates are not shown in this DAG to focus on randomization emulation."
 
@@ -680,8 +679,10 @@ dag_adjust <-
 # *********************************************************************** #
 
 fig_dag_rand <- 
-  (dag_unadjust + labs(title="**A.** Confounding at baseline") + theme(plot.title = ggtext::element_markdown())) / 
-  (dag_adjust + labs(title="**B.** Successful emulation of randomization") + theme(plot.title = ggtext::element_markdown()))
+  (dag_unadjust + labs(title="**A.** Confounding at baseline") + 
+     theme(plot.title = ggtext::element_markdown())) / 
+  (dag_adjust + labs(title="**B.** Successful emulation of randomization") + 
+     theme(plot.title = ggtext::element_markdown()))
 
 # ********************************************** #
 #                Save as png/pdf                 #
@@ -745,7 +746,7 @@ In the context of an observational study, the (parametric) g-formula is used wit
 
 In the context of this target trial emulation (@fig-dag-one-t), $P$ includes dietary habits prior to the baseline assessment. $P$ can have an effect on baseline dietary habits (e.g., prior healthy habits increase likelihood of baseline healthy habits) and dietary habits throughout the target trial emulation (e.g., prior healthy habits increase likelihood of adhering to healthy habits). $P$ also influences baseline and time-varying confounding. Finally, given the long-term effect of chronic exposure, $P$ potentially also affect $Y$ directly.
 
-```{r fig-dag-one-t, echo=FALSE}
+```{r fig-dag-one-t }
 #| label: fig-dag-one-t
 #| fig-cap: "Directed acyclic graph (DAG) depicting the hypothesized relationship among prior dietary exposure and time-varying interventions (diet, physical activity) and covariates. Arrows from the Z node are not shown for clarity, but would point towards all baseline and time-varying nodes, as well as outcome. Only one follow-up is shown for visualization purpose, but the hypothesized causal structure extends to additional follow-ups."
 
@@ -841,7 +842,6 @@ dag_one_tf <-
   #geom_dag_point(aes(colour = name),show.legend=FALSE) +
   #geom_dag_edges(aes(edge_colour=name_colour,edge_linetype=name_line)) +
   #scale_colour_manual(values=name_colour) +
-  #geom_dag_text() +
   geom_dag_text(aes(label=dag_one_t_labels), size=7) +
   labs(#title="Hypothesized relationship between diet, physical activity and outcome",
        caption = "Arrows from Z to L, X, Y are not shown") +

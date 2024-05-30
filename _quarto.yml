@@ -13,11 +13,15 @@ website:
     - icon: database-fill
       text: "Data preparation"
       file: 1.0-Data_preparation.R
-    - text: "Manuscript"
+    - icon: file-earmark-text
+      text: "Manuscript"
       file: 9.1-Manuscript.qmd
     - text: "Supplement"
       file: 9.2-Supplement.qmd
     right:
+    - icon: github
+      text: Repository
+      href: "https://github.com/didierbrassard/NuAge_protocol"
     - icon: envelope
       text: Email
       href: "mailto:didier.brassard@mcgill.ca"
