@@ -138,13 +138,15 @@ load(file.path(dir_processed, "dietsim_hefi.rdata"))
 
 **Background**: The Canada's Food Guide 2019 (CFG) provides universal recommendations to individuals aged 2 years or older. The extent to which these recommendations are appropriate for older adults is unknown. Although ideal, conducting a large randomized controlled trial is unrealistic in the short term. An alternative is the target trial emulation framework for causal inference using observational data.
 
-**Objective**: Our aim is to describe the protocol of a target trial emulation in older adults with emphasis on key aspects of a hypothetical sustained diet and physical activity intervention.
+**Objectives**: Our aim is to describe the protocol of a target trial emulation in older adults with emphasis on key aspects of a hypothetical sustained diet and physical activity intervention.
 
-**Methods**: To emulate the target trial, non-experimental data from the NuAge prospective study (n=1753, adults aged 67 years or older) will be used. NuAge includes 4 yearly measurements of dietary intakes, covariates and outcomes. The per protocol causal contrast will be the primary causal contrast of interest to account for non-adherence. The sustained intervention strategy will be modelled using the parametric g-formula. In the hypothetical trial, participants would be instructed to meet sex-specific minimal intakes for vegetables and fruits, whole grains, animal- and plant-based protein foods, milk & plant-based beverages and unsaturated fats. Eligibility criteria, follow-up, intervention, outcomes, and causal contrast will be similar in the emulation to the target trial except for minor modifications. We will attempt to emulate randomization of treatment by adjusting for baseline covariates and pre-baseline dietary habits.
+**Methods**: To emulate the target trial, non-experimental data from the NuAge longitudinal study (n=1753, adults aged 67 years or older) will be used. NuAge includes 4 yearly measurements of dietary intakes, covariates and outcomes. The per protocol causal contrast will be the primary causal contrast of interest to account for non-adherence. The sustained intervention strategy will be modelled using the parametric g-formula. In the hypothetical trial, participants would be instructed to meet sex-specific minimal intakes for vegetables and fruits, whole grains, animal- and plant-based protein foods, milk & plant-based beverages and unsaturated fats. Eligibility criteria, follow-up, intervention, outcomes, and causal contrast will be similar in the emulation to the target trial except for minor modifications. We will attempt to emulate randomization of treatment by adjusting for baseline covariates and pre-baseline dietary habits.
+
+**Results**: Data collection for the NuAge study was completed in June 2008. For the present work, the main analysis has started in May 2024. Submission of the manuscript is expected by December 2024.
 
 **Conclusion**: Emulating a target trial will provide the first evidence of the adequacy of CFG 2019 recommendations for older adults in relation to health outcomes.
 
-**Keywords:** older adults; CFG; Canada’s Food Guide; dietary intervention; dietary guidelines; target trial; target trial emulation; hypothetical trial; HEFI-2019; Healthy Eating Food Index-2019.
+**Keywords:** aged; CFG; Canada’s Food Guide; diet; dietary guidelines; target trial; target trial emulation; hypothetical trial; HEFI-2019; Healthy Eating Food Index-2019.
 
 \newpage
 
@@ -180,7 +182,10 @@ Specifically, among adults aged 67 to 84 years followed over 3 years, and compar
 
 Data from the NuAge prospective cohort study will be used to emulate the target trial [@gaudreau2007]. The NuAge cohort comprised 1753 generally healthy community-dwelling adults aged 67 to 84 years at baseline and followed over 3 years. The baseline and each annual follow-up included comprehensive assessment on sociodemographic data, diet, physical activity, functional status as well as physical and mental health [@gaudreau2007].
 
-The NuAge Database and Biobank [@nuage2024] has received approval by the Research Ethics Board of the *Centre intégré universitaire de santé et de services sociaux de l'Estrie---Centre hospitalier universitaire de Sherbrooke*. Finally, the NuAge study sample is relevant to our research question. The target population of CFG recommendations comprise all individuals aged 2 years or older, which is compatible with the target sample of the NuAge study of generally healthy older adults from the greater Montreal, Sherbrooke and Laval areas, the province of Quebec, Canada.
+The NuAge study sample is relevant to our research question. The target population of CFG recommendations comprise all individuals aged 2 years or older, which is compatible with the target sample of the NuAge study of generally healthy older adults from the greater Montreal, Sherbrooke and Laval areas, the province of Quebec, Canada. 
+
+Finally, the NuAge Database and Biobank [@nuage2024] has received approval by the Research Ethics Board of the *Centre intégré universitaire de santé et de services sociaux de l'Estrie---Centre hospitalier universitaire de Sherbrooke*. 
+The use of data from the NuAge Database and Biobank for this project is approved by the McGill University Research Ethics Board Office (#22-11-041).
 
 ## Target trial
 
@@ -694,6 +699,9 @@ fig_dag_rand <-
   ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand.png"),
          plot=fig_dag_rand, dpi=300, width=8,height=8, units="in",scale=1)
   
+  ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand_jmir.png"),
+       plot=fig_dag_rand, dpi=300, width=1200,height=1200, units="px",scale=1)
+
 # ********************************************** #
 #              Load rendered figure              #
 # ********************************************** #
@@ -845,7 +853,10 @@ dag_one_tf <-
   geom_dag_text(aes(label=dag_one_t_labels), size=7) +
   labs(#title="Hypothesized relationship between diet, physical activity and outcome",
        caption = "Arrows from Z to L, X, Y are not shown") +
-  theme_dag()
+  theme_dag() + 
+  theme(
+    plot.background = element_rect(colour="white")
+  )
 
 # ********************************************** #
 #                Save as png/pdf                 #
@@ -856,6 +867,9 @@ dag_one_tf <-
 
   ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t.png"),
          plot=dag_one_tf, dpi=300, width=8,height=4.5, units="in",scale=0.85)
+  
+  ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t_jmir.png"),
+         plot=dag_one_tf, dpi=300, width=1200,height=600, units="px",scale=1)
 
 # ********************************************** #
 #              Load rendered figure              #
@@ -897,6 +911,10 @@ Variance will be estimated using a minimum of 200 bootstrap sample replicates to
 
 The main statistical analyses will be conducted using R (version 4.3.1 or greater) and the gfoRmula package [@gfoRmula; @mcgrath2020]. The manuscript results will be generated using Quarto markdown. Codes for main analyses and generation of manuscript results will be shared in a publicly available code repository.
 
+# Results
+
+Data collection for the NuAge study was completed in June 2008. For the present work, the main analysis based on the final curated data started in May 2024. The manuscript will be written according to the Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement. We anticipate the submission of the manuscript to peer-reviewed academic journal by December 2024.
+
 \newpage
 
 # Discussion
@@ -905,7 +923,11 @@ In this study protocol, we have described a target trial to assess the effect of
 
 We emphasize that the purpose of emulating a target trial using observational data is to improve the quality of observational analysis [@hernan2016a; @hernan2022]. In other words, the target trial framework aims to support the coherence between the (causal) research question and the observational data analysis [@hernan2018]. However, estimating causal effects with non-experimental observational data depends on strong assumptions. The key assumptions are that there are no unmeasured confounder, no measurement error and no model misspecification (e.g., functional form of covariates, model outcome distribution) [@chiu2021]. We first recognize that the absence of residual or unmeasured confounding cannot be guaranteed. The extent to which this assumption is sufficiently satisfied depends on the appraisal of covariates considered. In that regard, we have used graphical tools, DAG, to explicitly describe our analytical assumptions and to identify confounding variables [@greenland1999; @tennant2021; @lipsky2022]. Second, the absence of measurement error assumption will not be satisfied considering the use of dietary intake data measured with 24-h dietary recalls. On one hand, 24-h dietary recalls have the least systematic error (bias) compared with other common instruments such as food-frequency questionnaire [@freedman2014; @freedman2015]. On the other hand, 24-h dietary recalls are largely affected by within-individual random errors [@thompson2015], which can cause bias in any direction in multivariable models [@keogh2020], as in the present study. This issue is mitigated, at least to some extent, by using average data from three repeated 24-h dietary recalls at each follow-up. Sensitivity analyses comparing estimates based on measurement-error corrected and uncorrected baseline dietary intakes will be used to assess the impact of random measurement errors. Third, the absence of model misspecification will be assessed by examining differences between the observed value of time-varying covariates and the predicted value of time-varying covariates as modeled with the g-formula.
 
+## Limitations
+
 Strengths of this study and protocol include the explicit emulation of a hypothetical trial, the thorough description of the emulation of the sustained dietary intervention, and the use of background knowledge and DAG to derive a sufficient set of confounders. Limitations must be addressed. First, the sample size of the NuAge study is relatively limited (n=1753), although comprehensive nutrition and covariate data was collected. Second, the target food intakes based on diet simulations from Health Canada *exceed* the 99^th^ percentile of the usual intake distribution of Canadians 65 years or older from Canada in 2015 [@brassard2023]. The *a posteriori* revision of the dietary intervention targets will be needed if observed dietary intakes in NuAge are too far from targets (Table 2), as was done in a previous nutrition target trial emulation [@ibsen2023]. Third, the presence of random measurement error associated with 24-h dietary recalls may bias estimates. Finally, the target trial emulation cannot replace an actual RCT. Evidence from RCT will be required to confirm the value of either CFG recommendations or the enhanced CFG recommendations.
+
+## Conclusion
 
 In conclusion, the target trial framework is relevant to estimate the causal effect of adhering to CFG's recommendations using non-experimental data when a RCT is impractical [@hernan2016a; @chiu2021]. Coupled with key assumptions, including the absence of unmeasured confounding, the absence of measurement error and no model misspecification, we believe the emulation will provide timely evidence regarding the effect of adhering to CFG's recommendations in older adults and inform on the added value of a reformulation.
 
@@ -917,7 +939,7 @@ In conclusion, the target trial framework is relevant to estimate the causal eff
 
 Conceptualization: all authors; Methodology: DB and SC; Data curation, formal analysis, visualization and writing – original draft: DB; Supervision: SC; Writing – review & editing: all authors.
 
-## Competing Interests
+## Conflicts of Interest
 
 DB was a casual employee of Health Canada (2019-2020) and held a doctoral training award from the Fonds de recherche du Québec -- Santé (2019-2021). DB has no conflicts of interest. 
 SC receives research funding from the CIHR, *Fonds de recherche du Québec*, Canadian Foundation for Dietetics Research, Canadian Foundation for Innovation and Canadian Cancer Society. None of these agencies has funded nor was involved in this work. 
@@ -940,3 +962,14 @@ The data and code used for this manuscript will be made available at https://git
 
 ::: {#refs}
 :::
+
+\newpage
+
+# Abbreviations {.unnumbered}
+
+CFG: Canada's Food Guide  
+DAG: directed acyclic graph  
+HEFI: Healthy Eating Food Index 2019  
+RA: Reference amount  
+RCT: randomized controlled trial  
+
