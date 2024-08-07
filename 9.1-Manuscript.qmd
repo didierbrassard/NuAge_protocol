@@ -47,7 +47,7 @@ knitr:
 table-of-contents: false
 code-fold: true
 bibliography: manuscript/references/references.bib
-csl: manuscript/references/apnm.csl
+csl: manuscript/references/journal-of-medical-internet-research.csl
 #' title: Quarto document used to generate the text, figures and tables of the protocol
 #' run time: <1min
 ---
