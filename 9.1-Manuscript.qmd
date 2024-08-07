@@ -913,11 +913,22 @@ In conclusion, the target trial framework is relevant to estimate the causal eff
 
 # Acknowledgements
 
-## Conflict of Interest and Funding Disclosure
+## Authors' contributions
 
-DB was a casual employee of Health Canada (2019-2020), held a doctoral training award from the Fonds de recherche du Québec -- Santé (2019-2021) and holds a Canadian Institutes of Health Research (CIHR) Fellowship award (MFE-181852) to conduct the present study. SC receives research funding from the CIHR, *Fonds de recherche du Québec*, Canadian Foundation for Dietetics Research, Canadian Foundation for Innovation and Canadian Cancer Society. None of these agencies has funded nor was involved in this work. NP is the NuAge Database Administrator; NP and SC serve as NuAge Steering Committee Members; DB has no conflicts of interest.
+Conceptualization: all authors; Methodology: DB and SC; Data curation, formal analysis, visualization and writing – original draft: DB; Supervision: SC; Writing – review & editing: all authors.
+
+## Competing Interests
+
+DB was a casual employee of Health Canada (2019-2020) and held a doctoral training award from the Fonds de recherche du Québec -- Santé (2019-2021). DB has no conflicts of interest. 
+SC receives research funding from the CIHR, *Fonds de recherche du Québec*, Canadian Foundation for Dietetics Research, Canadian Foundation for Innovation and Canadian Cancer Society. None of these agencies has funded nor was involved in this work. 
+
+NP is the NuAge Database Administrator; NP and SC serve as NuAge Steering Committee Members.
 
 The NuAge Study was supported by a research grant from the Canadian Institutes of Health Research (CIHR; MOP-62842). The NuAge Database and Biobank are supported by the Fonds de recherche du Québec (FRQ; 2020-VICO-279753), the Quebec Network for Research on Aging, a thematic network funded by the Fonds de Recherche du Québec - Santé (FRQS) and by the Merck-Frosst Chair funded by La Fondation de l’Université de Sherbrooke.
+
+## Funding statement
+
+This work was supported by a Canadian Institutes of Health Research (CIHR) Fellowship award (MFE-181852) to DB.
 
 ## Data availability and code
 
