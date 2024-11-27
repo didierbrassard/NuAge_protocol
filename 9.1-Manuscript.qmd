@@ -613,7 +613,7 @@ dag_unadjust <-
   theme_dag()
 
 # *********************************************************************** #
-#               Generate second figure without cofounding                 #
+#              Generate second figure without confounding                 #
 # *********************************************************************** #
 
 # Use default color to draw attention to the path of interests
