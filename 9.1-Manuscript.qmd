@@ -47,7 +47,7 @@ knitr:
 table-of-contents: false
 code-fold: true
 bibliography: manuscript/references/references.bib
-csl: manuscript/references/apnm.csl
+csl: manuscript/references/journal-of-medical-internet-research.csl
 #' title: Quarto document used to generate the text, figures and tables of the protocol
 #' run time: <1min
 ---
@@ -136,15 +136,17 @@ load(file.path(dir_processed, "dietsim_hefi.rdata"))
 
 # Abstract
 
-**Background**: The Canada's Food Guide 2019 (CFG) provides universal recommendations to individuals aged 2 years or older. The extent to which these recommendations are appropriate for older adults is unknown. Although ideal, conducting a large randomized controlled trial is unrealistic in the short term. An alternative is the target trial emulation framework for causal inference using observational data.
+**Background**: The Canada's Food Guide 2019 (CFG) provides universal recommendations to individuals aged 2 years or older. The extent to which these recommendations are appropriate for older adults is unknown. Although ideal, conducting a large randomized controlled trial is unrealistic in the short term. An alternative is the target trial emulation framework for causal inference, a novel approach to improve the analysis of observational data.
 
-**Objective**: Our aim is to describe the protocol of a target trial emulation in older adults with emphasis on key aspects of a hypothetical sustained diet and physical activity intervention.
+**Objectives**: Our aim is to describe the protocol of a target trial emulation in older adults with emphasis on key aspects of a hypothetical sustained diet and physical activity intervention.
 
-**Methods**: To emulate the target trial, non-experimental data from the NuAge prospective study (n=1753, adults aged 67 years or older) will be used. NuAge includes 4 yearly measurements of dietary intakes, covariates and outcomes. The per protocol causal contrast will be the primary causal contrast of interest to account for non-adherence. The sustained intervention strategy will be modelled using the parametric g-formula. In the hypothetical trial, participants would be instructed to meet sex-specific minimal intakes for vegetables and fruits, whole grains, animal- and plant-based protein foods, milk & plant-based beverages and unsaturated fats. Eligibility criteria, follow-up, intervention, outcomes, and causal contrast will be similar in the emulation to the target trial except for minor modifications. We will attempt to emulate randomization of treatment by adjusting for baseline covariates and pre-baseline dietary habits.
+**Methods**: To emulate the target trial, non-experimental data from the NuAge longitudinal study (n=1753, adults aged 67 years or older) will be used. NuAge includes 4 yearly measurements of dietary intakes, covariates and outcomes. The per protocol causal contrast will be the primary causal contrast of interest to account for non-adherence. The sustained intervention strategy will be modelled using the parametric g-formula. In the hypothetical trial, participants would be instructed to meet sex-specific minimal intakes for vegetables and fruits, whole grains, animal- and plant-based protein foods, milk & plant-based beverages and unsaturated fats. Eligibility criteria, follow-up, intervention, outcomes, and causal contrast will be similar in the emulation to the target trial except for minor modifications. We will attempt to emulate randomization of treatment by adjusting for baseline covariates and pre-baseline dietary habits.
+
+**Results**: Data collection for the NuAge study was completed in June 2008. For the present work, the main analysis has started in May 2024. Submission of the manuscript is expected by December 2024.
 
 **Conclusion**: Emulating a target trial will provide the first evidence of the adequacy of CFG 2019 recommendations for older adults in relation to health outcomes.
 
-**Keywords:** older adults; CFG; Canada’s Food Guide; dietary intervention; dietary guidelines; target trial; target trial emulation; hypothetical trial; HEFI-2019; Healthy Eating Food Index-2019.
+**Keywords:** aged; CFG; Canada’s Food Guide; diet; dietary guidelines; target trial; target trial emulation; hypothetical trial; HEFI-2019; Healthy Eating Food Index-2019.
 
 \newpage
 
@@ -152,7 +154,7 @@ load(file.path(dir_processed, "dietsim_hefi.rdata"))
 
 The latest edition of Canada's Food Guide (CFG) was published in 2019 [@healthcanada2019]. Compared with the previous edition, key changes include the removal of the pre-specified number of servings to consume each day, a shift towards qualitative ("eat plenty of...") instead of quantitative recommendations and the provision of universal recommendations instead of age and sex-specific recommendations. In addition, CFG recommendations primarily aim at reducing chronic disease risk. Indeed, the evidence behind CFG's recommendations concern mitigation of cardiovascular disease, cancer and type 2 diabetes risk [@healthcanada2018]. However, evidence from a nationally representative survey of adults aged 65 years or older from Canada suggested that greater adherence to recommendations was insufficient to meet calcium, vitamin D and folate requirements [@brassard2023]. In Canada, one third of community-dwelling older adults are at high nutrition risk [@ramagemorin2013; @mills2023], highlighting the importance of maintaining adequate nutritional status in this stratum of the population. Similarly, in absence of specific recommendations on the amount of protein foods to eat, older adults may be eating less protein than required to maintain muscle mass [@bauer2013; @deutz2014; @paddonjones2015]. Canada’s Food Guide also provide brief physical activity recommendation, but without explicit acknowledgement of the importance of these recommendations for older adults [@healthcanada2019]. Indeed, performing a minimal amount of physical activity is paramount to maintaining muscle mass [@bauer2013; @deutz2014]. Thus, the universal recommendations in CFG may not be appropriate for older adults since they face unique challenges to consuming a healthy diet [@remond2015], and may require specific nutritional strategies [@shlisky2017].
 
-Ideally, a randomized controlled trial (RCT) would be conducted to investigate the adequacy of CFG recommendations in older adults. However, such RCT is unlikely to be conducted in the short term. An alternative is the target trial emulation framework for causal effect estimation using observational data [@hernan2016a; @kutcher2021; @tobias2021; @hernan2022]. Informally, the target trial emulation framework is intended to highlight and address design issues of observational data analysis that aims to estimate a causal effect by explicitly emulating a hypothetical trial [@hernan2016a].
+Ideally, a randomized controlled trial (RCT) would be conducted to investigate the adequacy of CFG recommendations in older adults. However, such RCT is unlikely to be conducted in the short term. An alternative is the target trial emulation framework for causal effect estimation using observational data [@hernan2016a; @kutcher2021; @tobias2021; @hernan2022]. Informally, the target trial emulation framework is intended to highlight and address design issues of observational data analysis that aims to estimate a causal effect by explicitly emulating a hypothetical trial [@hernan2016a]. In nutritional epidemiology, common issues with design and analyses can yield results that are largely inconsistent with those of randomized trials [@stern2024]. For example, the lack of consideration of the compositional nature of diet can dramatically influence effect estimates, i.e., that increasing the intake of one food must compensated by decreasing the intake of another food in substitution modeling [@tobias2022; @tomova2022b; @stern2024]. Furthermore, diet is a lifelong sustained exposure. In an observational study, the effect of diet assessed at a given time may actually reflect the cumulative exposure to prior dietary habits. In turn, ignoring prior dietary habits may result in a misalignment of "time zero" [@hernan2016c], since dietary habits are not randomly assigned at the beginning of the observational study. In other words, ignoring prior dietary habits makes it impossible to distinguish the effect due to prospective (hypothetical) dietary modification from the effect due to retrospective dietary habits. The target trial framework is a helpful tool to highlight and address common issues in nutritional epidemiology. Ultimately, a successful emulation of the target trial based on observational data could yield effect estimates that more closely align with those of a hypothetical future RCT. Example applications of the target trial framework include the emulation of interventions on diet [@chiu2021; @berkowitz2023; @bonekamp2023; @ibsen2023], physical activity [@dickerman2019], or both [@guo2024].
 
 To the best of our knowledge, the target trial framework has not been used to assess the effect of adhering to CFG's recommendations. Accordingly, the objectives of the present study are, first, to describe the protocol of the emulation of a target trial using observational data from the NuAge study [@gaudreau2007], a cohort of 1753 adults aged 67 to 84 years at baseline, and, second, to address key aspects of the target trial emulation in the context of a sustained lifestyle intervention strategy involving diet and physical activity. Key aspects are the description of the sustained lifestyle intervention strategy, the attempt to emulate randomization, as well as assumptions and limitations specific to diet intervention. Of note, more general introductory texts to the target trial framework are available elsewhere [@hernan2016a; @kutcher2021; @hernan2022].
 
@@ -180,11 +182,13 @@ Specifically, among adults aged 67 to 84 years followed over 3 years, and compar
 
 Data from the NuAge prospective cohort study will be used to emulate the target trial [@gaudreau2007]. The NuAge cohort comprised 1753 generally healthy community-dwelling adults aged 67 to 84 years at baseline and followed over 3 years. The baseline and each annual follow-up included comprehensive assessment on sociodemographic data, diet, physical activity, functional status as well as physical and mental health [@gaudreau2007].
 
-The NuAge Database and Biobank [@nuage2024] has received approval by the Research Ethics Board of the *Centre intégré universitaire de santé et de services sociaux de l'Estrie---Centre hospitalier universitaire de Sherbrooke*. Finally, the NuAge study sample is relevant to our research question. The target population of CFG recommendations comprise all individuals aged 2 years or older, which is compatible with the target sample of the NuAge study of generally healthy older adults from the greater Montreal, Sherbrooke and Laval areas, the province of Quebec, Canada.
+The NuAge study sample is relevant to our research question. The target population of CFG recommendations comprise all individuals aged 2 years or older, which is compatible with the target sample of the NuAge study of generally healthy older adults from the greater Montreal, Sherbrooke and Laval areas, the province of Quebec, Canada. 
 
 ## Target trial
 
-The first step of a target trial emulation is the description of the target trial, i.e., the protocol of the hypothetical randomized controlled trial we would like to conduct [@hernan2016a; @hernan2022]. **Table 1** presents the target trial and its emulation using observational data from the NuAge study. Key differences between the target trial and its emulation are that participants will be required to provide complete dietary assessment and covariate data at baseline (eligibility component); and that we will attempt to emulate the randomized assignment by adjusting for dietary intakes before baseline as well as baseline covariates (assignment component).
+The target trial framework has been suggested as a potential solution to improve the analysis of nutritional epidemiology studies aiming at causal inference [@tobias2021]. Informally, the target trial framework helps to align the observational data analysis with that of a hypothetical trial. This framework is appropriate for the research question in the present study, since we aim to estimate the effect of adhering to a hypothetical diet and physical activity intervention using on observational data. The first step of a target trial emulation is the description of the target trial, i.e., the protocol of the hypothetical randomized controlled trial we would like to conduct [@hernan2016a; @hernan2022]. The second step is the emulation, i.e., describing how to target trial is emulated and conducting the study described in the present protocol. 
+
+**Table 1** presents the target trial and its emulation using observational data from the NuAge study. Key differences between the target trial and its emulation are that participants will be required to provide complete dietary assessment and covariate data at baseline (eligibility component); and that we will attempt to emulate the randomized assignment by adjusting for dietary intakes before baseline as well as baseline covariates (assignment component).
 
 ```{r table-target}
 # #| label: tbl-target
@@ -268,7 +272,7 @@ Physical activity recommendations are not traditionally at the forefront of CFG'
 
 #### The challenge of a well-defined nutritional intervention
 
-Emulating a well-defined dietary intervention for CFG's recommendations is challenging. First, recommendations in the latest edition of CFG are qualitative and flexible (e.g., "*Eat plenty of vegetables and fruits*"; @healthcanada2019; @brassard2022a). Thus, multiple suitable, but nonetheless very different, dietary patterns can achieve adherence to recommendations. Second, CFG's recommendations target both food intakes (e.g., vegetables and fruits) and nutrients (e.g., saturated fats). The nutrient-based recommendations can be achieved by intervening on the consumption of multiple different foods. For example, to achieve the hypothetical intervention "*decreasing consumption of calories from saturated fats*" one could decrease saturated fats from dairy, nuts and low nutritive value foods altogether. Arguably, the relationship beetween these food categories and a given health outcome may vary greatly.
+Emulating a well-defined dietary intervention for CFG's recommendations is challenging. First, recommendations in the latest edition of CFG are qualitative and flexible (e.g., "*Eat plenty of vegetables and fruits*"; [@healthcanada2019; @brassard2022a]). Thus, multiple suitable, but nonetheless very different, dietary patterns can achieve adherence to recommendations. Second, CFG's recommendations target both food intakes (e.g., vegetables and fruits) and nutrients (e.g., saturated fats). The nutrient-based recommendations can be achieved by intervening on the consumption of multiple different foods. For example, to achieve the hypothetical intervention "*decreasing consumption of calories from saturated fats*" one could decrease saturated fats from dairy, nuts and low nutritive value foods altogether. Arguably, the relationship between these food categories and a given health outcome may vary greatly.
 
 To estimate a causal effect using observational data, the hypothetical interventions must be sufficiently well-defined or that until "no meaningful variation" of that intervention remains [@hernan2016b; @chiu2022]. In other words, the hypothetical diet interventions should be elaborated until no additional dietary characteristics are deemed impactful in regards of the outcome of interest. Another consideration is that the modelling of hypothetical interventions should ideally be conducted with dietary intakes expressed using the same units. For example, mixing food intakes expressed in servings and grams in a statistical model may cause poor estimation of causal effects [@tomova2022b]. Finally, the statistical approach used to account for 'total energy' or total food intake also affects the causal effect of interest and should be consistent with the research question [@kipnis1993; @tomova2022a; @tomova2022b; @chiu2022].
 
@@ -307,7 +311,7 @@ These diets achieve near perfect Healthy Eating Food Index (HEFI)-2019 scores (\
 
 Note that the HEFI-2019 could have been used as main exposure to measure adherence to CFG. However, the use of a composite score metric would not fully satisfy the criterion of a well-defined intervention to estimate a causal effect. First, high HEFI-2019 scores, and high adherence to CFG's recommendations, can be achieved through many different strategies or dietary patterns. In the context of observational data, the specific strategies through which individuals achieve high HEFI-2019 score would be based on dietary habits and patterns self-selected by the participants. This approach is similar to asking hypothetical trial participants to modify their intakes without clearly indicating how, which would obscure the causal effect estimated. Second, the HEFI-2019 score includes recommendations both on foods and on nutrients. As described above, mixing servings and grams in a statistical models may cause poor estimation of causal effects [@tomova2022b].
 
-We stress that the diets simulated by Health Canada were not actually consumed by older adults. For this reason, the simulated values for vegetables and fruits, whole-grain foods and plant-based protein foods *exceed* the 99^th^ percentile of the distribution of usual intakes of these food categories as estimated in adults aged 65 years or more from the Canadian Community Health Survey 2015 - Nutrition [@brassard2023]. In **Table 2**, the target intakes vegetables and fruits, whole grains, and plant-based protein foods for the adhering to Canada's Food Guide 2019 recommendations intervention were revised to correspond, at most, to the 90^th^ percentile of the distribution of usual intakes among Canadians aged 65 years or more in 2015 [@brassard2023].
+We stress that the diets simulated by Health Canada were not actually consumed by older adults. For this reason, the simulated values for vegetables and fruits, whole-grain foods and plant-based protein foods *exceed* the 99^th^ percentile of the distribution of usual intakes of these food categories as estimated in adults aged 65 years or more from the Canadian Community Health Survey 2015 - Nutrition [@brassard2023]. In **Table 2**, the target intakes vegetables and fruits, whole grains, and plant-based protein foods for the adhering to Canada's Food Guide 2019 recommendations intervention were revised to correspond, at most, to the 90^th^ percentile of the distribution of usual intakes among Canadians aged 65 years or more in 2015 [@brassard2023]. Since Canada’s Food Guide 2019 does not have a portion size system, reference amounts (RA) were used as a proxy for servings. RA are regulated quantity of foods that reflect the portion size typically consumed at 1 sitting in Canada. RA were used by Health Canada to simulate diet consistent with Canada's Food Guide 2019 recommendations and Dietary Reference Intake (Supplemental Table 1), hence RAs are adequate for the present work.
 
 #### Implementation
 
@@ -317,7 +321,9 @@ In the target trial, the sustained intervention strategy could be implemented as
 2.  if reported food intakes and duration of physical activity were **equal to or above** the prespecified thresholds (Table 2), no change would be suggested to the participants' diet or physical activity If food intakes or duration of physical activity were **below** the prespecified thresholds, participants would be instructed to increase food consumption to exactly the prespecified portions or increase physical activity duration to 30 minutes per day (when applicable);
 3.  if changes are required, participants would be instructed to decrease consumption of foods not recommended to the extent of the increase in (2). For example, if a 2-serving increase in vegetables and fruits is required to meet the pre-specified intervention thresholds, participants would be instructed to substitute 2 servings of vegetables and fruits for `r knitr::combine_words(notrecommended)`.
 
-In the emulation, the substitution will be implemented by including "total intakes" as a covariate and leaving out foods not recommended from the model. In this approach to account for "total energy", all model coefficients reflect the action of increasing intakes of recommended foods and a concomitant decrease in *any* of the foods not recommended [@kipnis1993]. On the one hand, this approach is potentially confusing [@tomova2022a; @tomova2022b], since the default interpretation of model coefficients is the action of increasing the intake of each **food included in the model**, while decreasing the intake of foods **not in the model** [@kipnis1993]. On the other hand, the standard model is generally consistent with the implementation of dietary intervention in feeding trials [@willett2013; @tobias2022; @willett2022]. The standard model also reduces the number of variables to be considered as intervention variables. Otherwise, `r length(notrecommended)` additional dietary components would have to be modelled for foods not recommended (i.e., `r knitr::combine_words(notrecommended)`). Finally, the explicit description of the intervention strategies in the target trial protocol clarifies the estimand of interest, as done previously [@chiu2021; @chiu2022]. Of note, nutrient-based recommendations in CFG (i.e, saturated fats, free sugars and sodium) are not explicitly modelled to avoid the problems associated with mixed-unit models [@tomova2022b]. In the target trial, we assume that nutrient-based targets would be met by reducing consumption of foods not recommended (i.e., `r knitr::combine_words(notrecommended)`). In that regard, food-level substitution analyses in Canadians support this assumption for saturated fats [@harrison2021; @harrison2022].
+In the emulation, for all hypothetical interventions, the substitution will be implemented by including "total intakes" as a covariate and leaving out foods not recommended from the models. More precisely, a variable reflecting total food intake (in RA/day) and a variable reflecting total beverage intake (in RA/day) will be included in all models. Hence, total food and beverage intakes will be constant across hypothetical diet interventions. In this approach to account for "total energy", all model coefficients reflect the action of increasing intakes of recommended foods and a concomitant decrease in *any* of the foods not recommended [@kipnis1993]. On the one hand, this approach is potentially confusing [@tomova2022a; @tomova2022b], since the default interpretation of model coefficients is the action of increasing the intake of each **food included in the model**, while decreasing the intake of foods **not in the model** [@kipnis1993]. On the other hand, the standard model is generally consistent with the implementation of dietary intervention in feeding trials [@willett2013; @tobias2022; @willett2022]. The standard model also reduces the number of variables to be considered as intervention variables. Otherwise, `r length(notrecommended)` additional dietary components would have to be modelled for foods not recommended (i.e., `r knitr::combine_words(notrecommended)`). Finally, the explicit description of the intervention strategies in the target trial protocol clarifies the estimand of interest, as done previously [@chiu2021; @chiu2022].
+
+Of note, nutrient-based recommendations in CFG (i.e, saturated fats, free sugars and sodium) are not explicitly modelled to avoid the problems associated with mixed-unit models [@tomova2022b]. In the target trial, we assume that nutrient-based targets would be met by reducing consumption of foods not recommended (i.e., `r knitr::combine_words(notrecommended)`). In that regard, food-level substitution analyses in Canadians support this assumption for saturated fats [@harrison2021; @harrison2022].
 
 \newpage
 
@@ -410,7 +416,7 @@ tab_dietint <-
   gt::tab_header(
      title = "Hypothetical diet and exercise interventions emulated in the NuAge cohort study, by sex") |>
   gt::tab_footnote(
-    footnote = "CFG, Canada's Food Guide; NA, not available; NuAge, Quebec Longitudinal Study on Nutrition and Successful Aging; RA, reference amount; y, year",
+    footnote = glue::glue("The emulation of all hypothetical interventions will be implemented using a substitution approach in statistical models. In all models, one variable for 'total food intake' and one variable for 'total beverage intake' will be included, and foods not recommended will be left out from the models (i.e., {knitr::combine_words(notrecommended)}). CFG, Canada's Food Guide; NuAge, Quebec Longitudinal Study on Nutrition and Successful Aging; RA, reference amount; y, year"),
     locations = cells_title("title")
     ) |>
   # Indicate what are 'control' values
@@ -492,7 +498,7 @@ Covariates include age at baseline, biological sex, region, education, living al
 # ********************************************** #
 
 # Dagitty frame
-dag_rand <-
+dag_rand_generic <-
  dagitty::dagitty(
 'dag {
 bb="0,0,1,1"
@@ -513,12 +519,11 @@ Z -> Y
 }')
 
 # Transform to ggdag
-dag_rand <-
-  ggdag::tidy_dagitty(dag_rand)
+dag_rand_generic <- ggdag::tidy_dagitty(dag_rand_generic)
 
 # Generate second set of coordinates for edge-arc 
-dag_rand <- 
-  dag_rand |>
+dag_rand_generic <- 
+  dag_rand_generic |>
     mutate(
     ## create second set of coordinates for edge-arc
     # x coordinates
@@ -536,39 +541,39 @@ dag_rand <-
     yend = ifelse(is.na(yend_arc),yend,NA),
     )
 
+
+# *********************************************************************** #
+#                   Generate panel A with confounding                     #
+# *********************************************************************** #
+
 # ********************************************** #
 #              Labelling and colors              #
 # ********************************************** #
 
 # Use default color to draw attention to the path of interests
 default_colour <- "black"
-highlight_colour <- "#a82203" #MetBrewer::met.brewer("Juarez",n=1)
+highlight_colour <- "#a82203" # MetBrewer::met.brewer("Juarez",n=1)
 
 # Add colors
-dag_rand <- 
-  dag_rand  |>
+dag_rand_unadjust <- 
+  dag_rand_generic  |>
   mutate(
-    #name_colour = "black",
     name_colour = ifelse(name!="X0",highlight_colour,default_colour),
     name_line = "solid"
-    #name_line = ifelse(name!="X0","longdash","solid")
-    #name_line = ifelse(name_colour==default_colour,"solid","longdash")
   ) 
 
 name_colour <-
   c(
     "X0" = default_colour,
-    #"X1" = highlight_colour,
     "L0" = highlight_colour,
-    #"L1" = highlight_colour,
     "Y" = default_colour,
     "P-1" = highlight_colour, 
     "Z" = highlight_colour
   )
 
 # add nodes label for ggplot
-dag_rand_labels <-
-  data.frame(dag_rand) |>
+dag_rand_unadjust_labels <-
+  data.frame(dag_rand_unadjust) |>
   dplyr::mutate(
     label = case_when(
     name =="X0"~"X\u2080",
@@ -583,40 +588,76 @@ dag_rand_labels <-
 #             Create DAG with ggplot             #
 # ********************************************** #
 
-dag_unadjust <-
-  dag_rand  |>
+make_dag_rand_A <- function(scale_node_size=1, text_size=4, default_node_size=16){
+  
+  # note: text size default is 4
+  
+  # calculate node size as a factor x default
+  node_size <- default_node_size * scale_node_size
+
+fig_dag_rand_unadjust <-
+  dag_rand_unadjust  |>
   ggplot(aes(
     x = x,
     y = y,
     xend = xend,
     yend = yend
   )) +
-  #geom_dag_point() +
-  geom_dag_point(aes(colour = name),show.legend=FALSE) +
-  #geom_dag_edges() +
+  geom_dag_point(aes(colour = name),size = node_size,show.legend=FALSE) +
   geom_dag_edges(aes(edge_colour   = name_colour,
                      edge_linetype = name_line)) +
-  #geom_dag_edges_arc(aes(xend=xend_arc,yend=yend_arc), curvature=0.25) +
   geom_dag_edges_arc(aes(xend         = xend_arc,
                         yend          = yend_arc,
                         edge_colour   = name_colour,
                         edge_linetype = name_line),curvature=0.25) +
   scale_colour_manual(values = name_colour) +
-  geom_dag_text(aes(label=dag_rand_labels), size=7) +
-  #labs(title = "Emulating randomization for a lifestyle intervention") +
+  geom_dag_text(aes(label=dag_rand_unadjust_labels), size=text_size) +
   theme_dag()
 
+return(fig_dag_rand_unadjust)
+
+}
+
+# Generate figure for different layout
+
+## normal version
+fig_unadjust_normal <- 
+  make_dag_rand_A(text_size=7) + 
+  labs(title="**A.** Confounding at baseline") + 
+  theme(plot.title = ggtext::element_markdown())
+
+## JMIR format
+fig_unadjust_jmir <- 
+  make_dag_rand_A(scale_node_size=0.5, text_size=3.5) + 
+  labs(title="**A.** Confounding at baseline") + 
+  theme(plot.title = ggtext::element_markdown(size=10))
+
+## JMIR TOC figure
+fig_dag_unadjust_jmir_toc <- 
+  make_dag_rand_A(scale_node_size=0.5, text_size=3.5) + 
+  theme(
+    plot.title = ggtext::element_markdown(size=10),
+    panel.background = element_rect(fill = "white", color=NA), 
+    plot.background = element_rect(fill = "white", color=NA)
+  )
+
 # *********************************************************************** #
-#               Generate second figure without cofounding                 #
+#                  Generate panel B without confounding                   #
 # *********************************************************************** #
 
+#note: starts based on 'dag_rand_generic' created above, but colors and path updated to highlight adjustment
+  
+# ********************************************** #
+#              Labelling and colors              #
+# ********************************************** #
+  
 # Use default color to draw attention to the path of interests
 default_colour <- "black"
 highlight_colour <- "darkgray" 
 
 # Add colors
-dag_rand2 <- 
-  dag_rand  |>
+dag_rand_adjust <- 
+  dag_rand_generic  |>
   mutate(
     # Color of point/edge/lines
     name_colour = highlight_colour,
@@ -636,8 +677,8 @@ name_colour <-
   )
 
 # add nodes label for ggplot
-dag_rand_labels2 <-
-  data.frame(dag_rand2) |>
+dag_rand_adjust_labels <-
+  data.frame(dag_rand_adjust) |>
   dplyr::mutate(
     label = case_when(
     name =="X0"~"X\u2080",
@@ -652,47 +693,81 @@ dag_rand_labels2 <-
 #             Create DAG with ggplot             #
 # ********************************************** #
 
-dag_adjust <-
-  dag_rand2  |>
+make_dag_rand_B <- function(scale_node_size=1, text_size=4, default_node_size=16){
+  
+  # calculate node size as a factor x default
+  node_size <- default_node_size * scale_node_size
+
+fig_dag_rand_adjust <-
+  dag_rand_adjust  |>
   ggplot(aes(
     x = x,
     y = y,
     xend = xend,
     yend = yend
   )) +
-  #geom_dag_point() +
-  geom_dag_point(aes(colour = name),show.legend=FALSE) +
-  #geom_dag_edges() +
+  geom_dag_point(aes(colour = name),size = node_size,show.legend=FALSE) +
   geom_dag_edges(aes(edge_colour   = name_colour,
                      edge_linetype = name_line)) +
-  #geom_dag_edges_arc(aes(xend=xend_arc,yend=yend_arc), curvature=0.25) +
   geom_dag_edges_arc(aes(xend         = xend_arc,
                         yend          = yend_arc,
                         edge_colour   = name_colour,
                         edge_linetype = name_line),curvature=0.25) +
   scale_colour_manual(values = name_colour) +
-  geom_dag_text(aes(label=dag_rand_labels2), size=7) +
+  geom_dag_text(aes(label=dag_rand_adjust_labels), size=text_size) +
   theme_dag()
+
+return(fig_dag_rand_adjust)
+
+}
+
+# Generate figure for different layout
+
+## normal version
+fig_adjust_normal <- 
+  make_dag_rand_B(text_size=7) + 
+  labs(title="**B.** Successful emulation of randomization") +
+  theme(plot.title = ggtext::element_markdown())
+
+## JMIR format
+fig_adjust_jmir <- 
+  make_dag_rand_B(scale_node_size=0.5, text_size=3.5) + 
+  labs(title="**B.** Successful emulation of randomization") +
+  theme(plot.title = ggtext::element_markdown(size=10))
 
 # *********************************************************************** #
 #                Append both DAG with/without confounding                 #
 # *********************************************************************** #
 
-fig_dag_rand <- 
-  (dag_unadjust + labs(title="**A.** Confounding at baseline") + 
-     theme(plot.title = ggtext::element_markdown())) / 
-  (dag_adjust + labs(title="**B.** Successful emulation of randomization") + 
-     theme(plot.title = ggtext::element_markdown()))
+# note: done using patchwork library
 
+fig_dag_rand_normal <- fig_unadjust_normal / fig_adjust_normal
+
+fig_dag_rand_jmir <- fig_unadjust_jmir / fig_adjust_jmir
+
+ 
 # ********************************************** #
 #                Save as png/pdf                 #
 # ********************************************** #
   
-  ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand.pdf"),
-        plot=fig_dag_rand, dpi=300, width=8,height=8, units="in",scale=1,device = cairo_pdf)
+# Normal version, pdf and png
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand.pdf"),
+                plot=fig_dag_rand_normal, dpi=300, width=8,height=8, units="in",scale=1,device = cairo_pdf)
 
-  ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand.png"),
-         plot=fig_dag_rand, dpi=300, width=8,height=8, units="in",scale=1)
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand.png"),
+                plot=fig_dag_rand_normal, dpi=300, width=8,height=8, units="in",scale=1)
+
+# JMIR scaling (max. 1200x1200)
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand_jmir.png"),
+                plot=fig_dag_rand_jmir, dpi=300, width=1200,height=1200, units="px",scale=1)
+
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand_jmir.pdf"),
+                plot=fig_dag_rand_jmir, dpi=300, width=1200,height=1200, units="px",scale=1, device = cairo_pdf)
+
+# JMIR scaling, for TOC (max. 1200x900)
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_unadjust_jmir_toc.png"),
+                plot=fig_dag_unadjust_jmir_toc, dpi=300, width=1200,height=800, units="px",scale=1)
+
   
 # ********************************************** #
 #              Load rendered figure              #
@@ -727,10 +802,10 @@ The end of follow-up outcome measurements will be used to estimate the effect of
 The estimand of interest in this study, the target causal effect of a sustained lifestyle intervention strategy, is
 
 $$
-E(Y^{1,1,1} |C=0)-E(Y^{0,0,0} |C=0)
+E(Y^{1,1,1,1} |C=0)-E(Y^{0,0,0,0} |C=0)
 $$ {#eq-estimand}
 
-that is, the expected value of a given health outcome $Y$ at the end of follow-up if all participants had increased their adherence to CFG recommendations on healthy food choices and physical activity, when applicable, at all three time points ($X_k=1$, "always intervene") vs., instead, if all participants had maintained their habitual diet and physical activity ($X_k=0$, "never intervene"). The estimand (@eq-estimand) also indicates that all participants completed the intervention ($C=0$), i.e., in absence of incomplete follow-up.
+that is, the expected value of a given health outcome $Y$ at the end of follow-up if all participants had increased their adherence to CFG recommendations on healthy food choices and physical activity, when applicable, at all four time points ($X_k=1$, "always intervene") vs., instead, if all participants had maintained their habitual diet and physical activity ($X_k=0$, "never intervene"). The estimand (@eq-estimand) also indicates that all participants completed the intervention ($C=0$), i.e., in absence of incomplete follow-up.
 
 The causal contrasts of interest are the observational analogues of "intention-to-treat" and "per protocol" [@hernan2016a]. Given the observational design, participants are not expected to have followed a treatment strategy unknown to them at the time of data collection. Therefore, the primary analysis will be the per protocol contrast of a sustained lifestyle intervention strategy. In the per protocol analysis, non-adherence to the hypothetical interventions can be accounted for. In the target trial, participants with a condition after baseline that would have prevented or limited participation in a hypothetical lifestyle intervention would be allowed to discontinue the intervention (e.g., lengthy hospitalization, prolonged bed rest, incident cancer). In the emulation, if such conditions occur in a sufficiently large number of participants, these participants will be "excused" from following the hypothetical intervention [@dickerman2019]. In other words, participants that would have been unable to pursue the study due to major events will not be considered as having incomplete follow-up if they attended the annual assessment. Allowing participants to discontinue adhering to the (hypothetical) intervention strategy mitigates confounding by the disease burden [@dickerman2019].
 
@@ -738,9 +813,7 @@ The intention-to-treat analysis will be a secondary analysis of a hypothetical p
 
 ### Statistical Analysis
 
-For the per protocol analysis, non-adherence to the hypothetical interventions and incomplete follow-up will be considered using g methods [@hernan2016a]. G-methods and the parametric g-formula in particular allow for adequate consideration of the time-varying confounding in the presence of feedback between the intervention and the confounding variables. In other words, these methods allow estimation of a total causal effect when the time-varying confounding variables (e.g., body weight or medication) are affected by a previous intervention (i.e., the hypothetical sustained lifestyle intervention). Time-varying covariates will be: major health problems, number of medications, dietary supplement use, physical activity, smoking and weight.
-
-In the context of an observational study, the (parametric) g-formula is used with parametric models to predict the joint-history of prior diet and physical activity habits (i.e., the hypothetical sustained intervention strategy) and confounding variables. For example, linear regression models are used to predict continuous covariates (e.g., body weight), while logistic regressions are used to predict binary or categorical variables (e.g., indicator variable for dietary supplement use). The per protocol causal contrast of hypothetical intervention presented in Table 2 is then emulated based on Monte Carlo simulated data generated using the g formula algorithm [@mcgrath2020]. More precisely, "threshold interventions" that depend on the reported dietary intakes or amount of physical activity [@taubman2009; @young2014] and the parametric g-formula [@robins1986; @mcgrath2020] will be used to emulate the intervention of "consuming at least $x$ servings of food" and "doing at least $x$ minutes of light to vigorous physical activity".
+Stratification and multivariable regression (i.e., covariate adjustment) are conventional statistical approaches to address confounding in nutritional epidemiology. However, the conventional approaches are not adequate to estimate cumulative treatment effects (e.g., diet over time) in the presence of time-varying confounding (e.g., weight status over time) and treatment (e.g., prior diet) [@naimi2017; @igelstrom2022]. In the present study, non-adherence to the hypothetical interventions and incomplete follow-up will be considered using (general) g methods for the per protocol analysis [@hernan2016a; @igelstrom2022]. Among g methods, the parametric g-formula provides the most flexibility for analyses involving hypothetical dietary interventions, as used previously [@taubman2009; @chiu2021; @ibsen2023]. Briefly, in the context of an observational study, the parametric g formula, and its implementation into an R package [@mcgrath2020], uses parametric models to predict the joint-history of prior diet and physical activity habits (i.e., the hypothetical sustained intervention strategy) and confounding variables. For example, linear regression models are used to predict continuous covariates (e.g., body weight), while logistic regressions are used to predict binary or categorical variables (e.g., indicator variable for dietary supplement use). The per protocol causal contrast of hypothetical intervention presented in Table 2 is then emulated based on Monte Carlo simulated data generated using the g formula algorithm [@mcgrath2020]. The parametric g formula correctly accounts for time-varying confounding in the presence of feedback between the intervention and the confounding variables, since confounding is addressed using standardization [@naimi2017; @igelstrom2022]. Furthermore, standardization allows to estimate an average causal effect (i.e., marginal effect) consistent with the estimand of interest (Equation 1) rather than a conditional effect. In summary, a "threshold interventions" that depend on the reported dietary intakes or amount of physical activity [@taubman2009; @young2014] and the parametric g-formula [@robins1986; @mcgrath2020] will be used to emulate the intervention of "consuming at least $x$ servings of food" and "doing at least $x$ minutes of light to vigorous physical activity".
 
 @fig-dag-one-t presents the causal DAG of the hypothesized relationship between a sustained lifestyle intervention strategy ($X_0, X_1$) and an end of follow-up outcome $Y$, for one follow-up after baseline (year 1). The model is limited to year 1 for clarity but the hypothesized causal structure extends to additional follow-ups. The exposure of interest $X_k$ is the joint and cumulative effect of a sustained diet and physical activity intervention strategy measured at baseline and at follow-ups.
 
@@ -751,8 +824,10 @@ In the context of this target trial emulation (@fig-dag-one-t), $P$ includes die
 #| fig-cap: "Directed acyclic graph (DAG) depicting the hypothesized relationship among prior dietary exposure and time-varying interventions (diet, physical activity) and covariates. Arrows from the Z node are not shown for clarity, but would point towards all baseline and time-varying nodes, as well as outcome. Only one follow-up is shown for visualization purpose, but the hypothesized causal structure extends to additional follow-ups."
 
 # ********************************************** #
-#      Time-varying DAG with one follow-up       #
+#           Input Dagitty information            #
 # ********************************************** #
+
+# note: time-varying DAG with one follow-up
 
 # Daggitty frame
 dag_one_t <-
@@ -828,7 +903,11 @@ dag_one_t_labels <-
 #             Create DAG with ggplot             #
 # ********************************************** #
 
-dag_one_tf <-
+make_dag_one_t <- function(scale_node_size=1, text_size=4, default_node_size=16){
+  
+  node_size <- default_node_size * scale_node_size
+
+fig_dag_one_t <-
   dag_one_t  |>
   ggplot(aes(
     x = x,
@@ -836,26 +915,44 @@ dag_one_tf <-
     xend = xend,
     yend = yend
   )) +
-  geom_dag_point() +
+  geom_dag_point(size = node_size) +
   geom_dag_edges() +
   geom_dag_edges_arc(aes(xend=xend_arc,yend=yend_arc), curvature=0.25) +
-  #geom_dag_point(aes(colour = name),show.legend=FALSE) +
-  #geom_dag_edges(aes(edge_colour=name_colour,edge_linetype=name_line)) +
-  #scale_colour_manual(values=name_colour) +
-  geom_dag_text(aes(label=dag_one_t_labels), size=7) +
+  geom_dag_text(aes(label=dag_one_t_labels), size=text_size) +
   labs(#title="Hypothesized relationship between diet, physical activity and outcome",
        caption = "Arrows from Z to L, X, Y are not shown") +
-  theme_dag()
+  theme_dag() + 
+  theme(
+    plot.background = element_rect(colour="white")
+  ) 
+
+return(fig_dag_one_t)
+}
+
+# Generate figure for different layout
+
+## normal version
+fig_dag_one_t_normal <- 
+  make_dag_one_t(text_size=7)
+
+## JMIR format
+fig_dag_one_t_jmir <- 
+  make_dag_one_t(scale_node_size=0.5, text_size=3.5) + 
+  theme(plot.caption=element_text(size=6))
+
 
 # ********************************************** #
 #                Save as png/pdf                 #
 # ********************************************** #
-  
-    ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t.pdf"),
-        plot=dag_one_tf, dpi=300, width=8,height=4.5, units="in",scale=0.85,device = cairo_pdf)
 
-  ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t.png"),
-         plot=dag_one_tf, dpi=300, width=8,height=4.5, units="in",scale=0.85)
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t.pdf"),
+                plot=fig_dag_one_t_normal, dpi=300, width=8,height=4.5, units="in",scale=0.85,device = cairo_pdf)
+
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t.png"),
+                plot=fig_dag_one_t_normal, dpi=300, width=8,height=4.5, units="in",scale=0.85)
+
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t_jmir.png"),
+                plot=fig_dag_one_t_jmir, dpi=300, width=1200,height=800, units="px",scale=1)
 
 # ********************************************** #
 #              Load rendered figure              #
@@ -897,6 +994,31 @@ Variance will be estimated using a minimum of 200 bootstrap sample replicates to
 
 The main statistical analyses will be conducted using R (version 4.3.1 or greater) and the gfoRmula package [@gfoRmula; @mcgrath2020]. The manuscript results will be generated using Quarto markdown. Codes for main analyses and generation of manuscript results will be shared in a publicly available code repository.
 
+## Ethical Considerations
+
+### Human subject ethics review approvals or exemptions 
+
+The original NuAge study protocol was approved by the Research Ethics Boards of the *Institut universitaire de gériatrie de Montréal* and the *Institut universitaire de gériatrie de Sherbrooke* (Quebec, Canada).
+The NuAge Database and Biobank [@nuage2024] has received approval by the Research Ethics Board of the *Centre intégré universitaire de santé et de services sociaux de l'Estrie---Centre hospitalier universitaire de Sherbrooke*. 
+Secondary analyses of data from the NuAge Database and Biobank for the study described in this protocol are approved by the McGill University Research Ethics Board Office (#22-11-041).
+
+### Informed Consent
+
+All participants of the NuAge study provided informed consent. 
+From the initial cohort of 1,793 participants, 1,753 (98%) agreed to the integration of their data and biological samples into the NuAge Database and Biobank for future studies.
+
+### Privacy and confidentiality
+
+Secondary analyses based on the NuAge Database and Biobank use de-identified data, which do not allow participants to be identified by the investigators. 
+
+### Compensation details
+
+Participants from the NuAge study voluntarily consented to participate and were not provided with monetary compensation.
+
+# Results
+
+Data collection for the NuAge study was completed in June 2008. For the present work, the main analysis based on the final curated data started in May 2024. The manuscript will be written according to the Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement. We anticipate the submission of the manuscript to peer-reviewed academic journal by December 2024.
+
 \newpage
 
 # Discussion
@@ -905,7 +1027,11 @@ In this study protocol, we have described a target trial to assess the effect of
 
 We emphasize that the purpose of emulating a target trial using observational data is to improve the quality of observational analysis [@hernan2016a; @hernan2022]. In other words, the target trial framework aims to support the coherence between the (causal) research question and the observational data analysis [@hernan2018]. However, estimating causal effects with non-experimental observational data depends on strong assumptions. The key assumptions are that there are no unmeasured confounder, no measurement error and no model misspecification (e.g., functional form of covariates, model outcome distribution) [@chiu2021]. We first recognize that the absence of residual or unmeasured confounding cannot be guaranteed. The extent to which this assumption is sufficiently satisfied depends on the appraisal of covariates considered. In that regard, we have used graphical tools, DAG, to explicitly describe our analytical assumptions and to identify confounding variables [@greenland1999; @tennant2021; @lipsky2022]. Second, the absence of measurement error assumption will not be satisfied considering the use of dietary intake data measured with 24-h dietary recalls. On one hand, 24-h dietary recalls have the least systematic error (bias) compared with other common instruments such as food-frequency questionnaire [@freedman2014; @freedman2015]. On the other hand, 24-h dietary recalls are largely affected by within-individual random errors [@thompson2015], which can cause bias in any direction in multivariable models [@keogh2020], as in the present study. This issue is mitigated, at least to some extent, by using average data from three repeated 24-h dietary recalls at each follow-up. Sensitivity analyses comparing estimates based on measurement-error corrected and uncorrected baseline dietary intakes will be used to assess the impact of random measurement errors. Third, the absence of model misspecification will be assessed by examining differences between the observed value of time-varying covariates and the predicted value of time-varying covariates as modeled with the g-formula.
 
+## Limitations
+
 Strengths of this study and protocol include the explicit emulation of a hypothetical trial, the thorough description of the emulation of the sustained dietary intervention, and the use of background knowledge and DAG to derive a sufficient set of confounders. Limitations must be addressed. First, the sample size of the NuAge study is relatively limited (n=1753), although comprehensive nutrition and covariate data was collected. Second, the target food intakes based on diet simulations from Health Canada *exceed* the 99^th^ percentile of the usual intake distribution of Canadians 65 years or older from Canada in 2015 [@brassard2023]. The *a posteriori* revision of the dietary intervention targets will be needed if observed dietary intakes in NuAge are too far from targets (Table 2), as was done in a previous nutrition target trial emulation [@ibsen2023]. Third, the presence of random measurement error associated with 24-h dietary recalls may bias estimates. Finally, the target trial emulation cannot replace an actual RCT. Evidence from RCT will be required to confirm the value of either CFG recommendations or the enhanced CFG recommendations.
+
+## Conclusion
 
 In conclusion, the target trial framework is relevant to estimate the causal effect of adhering to CFG's recommendations using non-experimental data when a RCT is impractical [@hernan2016a; @chiu2021]. Coupled with key assumptions, including the absence of unmeasured confounding, the absence of measurement error and no model misspecification, we believe the emulation will provide timely evidence regarding the effect of adhering to CFG's recommendations in older adults and inform on the added value of a reformulation.
 
@@ -917,7 +1043,7 @@ In conclusion, the target trial framework is relevant to estimate the causal eff
 
 Conceptualization: all authors; Methodology: DB and SC; Data curation, formal analysis, visualization and writing – original draft: DB; Supervision: SC; Writing – review & editing: all authors.
 
-## Competing Interests
+## Conflicts of Interest
 
 DB was a casual employee of Health Canada (2019-2020) and held a doctoral training award from the Fonds de recherche du Québec -- Santé (2019-2021). DB has no conflicts of interest. 
 SC receives research funding from the CIHR, *Fonds de recherche du Québec*, Canadian Foundation for Dietetics Research, Canadian Foundation for Innovation and Canadian Cancer Society. None of these agencies has funded nor was involved in this work. 
@@ -934,9 +1060,24 @@ This work was supported by a Canadian Institutes of Health Research (CIHR) Fello
 
 The data and code used for this manuscript will be made available at https://github.com/didierbrassard/NuAge_protocol
 
+**Multimedia Appendix 1**: Supplemental Table 1. HEFI-2019 dietary constituents and score among simulated diets by Health Canada, by age and sex group
+
 \newpage
 
 # References {.unnumbered}
 
 ::: {#refs}
 :::
+
+\newpage
+
+# Abbreviations {.unnumbered}
+
+CFG: Canada's Food Guide  
+DAG: directed acyclic graph  
+HEFI: Healthy Eating Food Index 2019  
+MCMC: Markov Chain Monte Carlo  
+NCI: National Cancer Institute  
+RA: Reference amount  
+RCT: randomized controlled trial  
+
