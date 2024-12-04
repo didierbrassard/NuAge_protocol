@@ -824,8 +824,10 @@ In the context of this target trial emulation (@fig-dag-one-t), $P$ includes die
 #| fig-cap: "Directed acyclic graph (DAG) depicting the hypothesized relationship among prior dietary exposure and time-varying interventions (diet, physical activity) and covariates. Arrows from the Z node are not shown for clarity, but would point towards all baseline and time-varying nodes, as well as outcome. Only one follow-up is shown for visualization purpose, but the hypothesized causal structure extends to additional follow-ups."
 
 # ********************************************** #
-#      Time-varying DAG with one follow-up       #
+#           Input Dagitty information            #
 # ********************************************** #
+
+# note: time-varying DAG with one follow-up
 
 # Daggitty frame
 dag_one_t <-
@@ -901,7 +903,11 @@ dag_one_t_labels <-
 #             Create DAG with ggplot             #
 # ********************************************** #
 
-dag_one_tf <-
+make_dag_one_t <- function(scale_node_size=1, text_size=4, default_node_size=16){
+  
+  node_size <- default_node_size * scale_node_size
+
+fig_dag_one_t <-
   dag_one_t  |>
   ggplot(aes(
     x = x,
@@ -909,32 +915,44 @@ dag_one_tf <-
     xend = xend,
     yend = yend
   )) +
-  geom_dag_point() +
+  geom_dag_point(size = node_size) +
   geom_dag_edges() +
   geom_dag_edges_arc(aes(xend=xend_arc,yend=yend_arc), curvature=0.25) +
-  #geom_dag_point(aes(colour = name),show.legend=FALSE) +
-  #geom_dag_edges(aes(edge_colour=name_colour,edge_linetype=name_line)) +
-  #scale_colour_manual(values=name_colour) +
-  geom_dag_text(aes(label=dag_one_t_labels), size=7) +
+  geom_dag_text(aes(label=dag_one_t_labels), size=text_size) +
   labs(#title="Hypothesized relationship between diet, physical activity and outcome",
        caption = "Arrows from Z to L, X, Y are not shown") +
   theme_dag() + 
   theme(
     plot.background = element_rect(colour="white")
-  )
+  ) 
+
+return(fig_dag_one_t)
+}
+
+# Generate figure for different layout
+
+## normal version
+fig_dag_one_t_normal <- 
+  make_dag_one_t(text_size=7)
+
+## JMIR format
+fig_dag_one_t_jmir <- 
+  make_dag_one_t(scale_node_size=0.5, text_size=3.5) + 
+  theme(plot.caption=element_text(size=6))
+
 
 # ********************************************** #
 #                Save as png/pdf                 #
 # ********************************************** #
-  
-    ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t.pdf"),
-        plot=dag_one_tf, dpi=300, width=8,height=4.5, units="in",scale=0.85,device = cairo_pdf)
 
-  ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t.png"),
-         plot=dag_one_tf, dpi=300, width=8,height=4.5, units="in",scale=0.85)
-  
-  ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t_jmir.png"),
-         plot=dag_one_tf, dpi=300, width=1200,height=600, units="px",scale=1)
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t.pdf"),
+                plot=fig_dag_one_t_normal, dpi=300, width=8,height=4.5, units="in",scale=0.85,device = cairo_pdf)
+
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t.png"),
+                plot=fig_dag_one_t_normal, dpi=300, width=8,height=4.5, units="in",scale=0.85)
+
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_1t_jmir.png"),
+                plot=fig_dag_one_t_jmir, dpi=300, width=1200,height=800, units="px",scale=1)
 
 # ********************************************** #
 #              Load rendered figure              #
