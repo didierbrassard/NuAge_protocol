@@ -498,7 +498,7 @@ Covariates include age at baseline, biological sex, region, education, living al
 # ********************************************** #
 
 # Dagitty frame
-dag_rand <-
+dag_rand_generic <-
  dagitty::dagitty(
 'dag {
 bb="0,0,1,1"
@@ -519,12 +519,11 @@ Z -> Y
 }')
 
 # Transform to ggdag
-dag_rand <-
-  ggdag::tidy_dagitty(dag_rand)
+dag_rand_generic <- ggdag::tidy_dagitty(dag_rand_generic)
 
 # Generate second set of coordinates for edge-arc 
-dag_rand <- 
-  dag_rand |>
+dag_rand_generic <- 
+  dag_rand_generic |>
     mutate(
     ## create second set of coordinates for edge-arc
     # x coordinates
@@ -542,39 +541,39 @@ dag_rand <-
     yend = ifelse(is.na(yend_arc),yend,NA),
     )
 
+
+# *********************************************************************** #
+#                   Generate panel A with confounding                     #
+# *********************************************************************** #
+
 # ********************************************** #
 #              Labelling and colors              #
 # ********************************************** #
 
 # Use default color to draw attention to the path of interests
 default_colour <- "black"
-highlight_colour <- "#a82203" #MetBrewer::met.brewer("Juarez",n=1)
+highlight_colour <- "#a82203" # MetBrewer::met.brewer("Juarez",n=1)
 
 # Add colors
-dag_rand <- 
-  dag_rand  |>
+dag_rand_unadjust <- 
+  dag_rand_generic  |>
   mutate(
-    #name_colour = "black",
     name_colour = ifelse(name!="X0",highlight_colour,default_colour),
     name_line = "solid"
-    #name_line = ifelse(name!="X0","longdash","solid")
-    #name_line = ifelse(name_colour==default_colour,"solid","longdash")
   ) 
 
 name_colour <-
   c(
     "X0" = default_colour,
-    #"X1" = highlight_colour,
     "L0" = highlight_colour,
-    #"L1" = highlight_colour,
     "Y" = default_colour,
     "P-1" = highlight_colour, 
     "Z" = highlight_colour
   )
 
 # add nodes label for ggplot
-dag_rand_labels <-
-  data.frame(dag_rand) |>
+dag_rand_unadjust_labels <-
+  data.frame(dag_rand_unadjust) |>
   dplyr::mutate(
     label = case_when(
     name =="X0"~"X\u2080",
@@ -589,40 +588,76 @@ dag_rand_labels <-
 #             Create DAG with ggplot             #
 # ********************************************** #
 
-dag_unadjust <-
-  dag_rand  |>
+make_dag_rand_A <- function(scale_node_size=1, text_size=4, default_node_size=16){
+  
+  # note: text size default is 4
+  
+  # calculate node size as a factor x default
+  node_size <- default_node_size * scale_node_size
+
+fig_dag_rand_unadjust <-
+  dag_rand_unadjust  |>
   ggplot(aes(
     x = x,
     y = y,
     xend = xend,
     yend = yend
   )) +
-  #geom_dag_point() +
-  geom_dag_point(aes(colour = name),show.legend=FALSE) +
-  #geom_dag_edges() +
+  geom_dag_point(aes(colour = name),size = node_size,show.legend=FALSE) +
   geom_dag_edges(aes(edge_colour   = name_colour,
                      edge_linetype = name_line)) +
-  #geom_dag_edges_arc(aes(xend=xend_arc,yend=yend_arc), curvature=0.25) +
   geom_dag_edges_arc(aes(xend         = xend_arc,
                         yend          = yend_arc,
                         edge_colour   = name_colour,
                         edge_linetype = name_line),curvature=0.25) +
   scale_colour_manual(values = name_colour) +
-  geom_dag_text(aes(label=dag_rand_labels), size=7) +
-  #labs(title = "Emulating randomization for a lifestyle intervention") +
+  geom_dag_text(aes(label=dag_rand_unadjust_labels), size=text_size) +
   theme_dag()
 
+return(fig_dag_rand_unadjust)
+
+}
+
+# Generate figure for different layout
+
+## normal version
+fig_unadjust_normal <- 
+  make_dag_rand_A(text_size=7) + 
+  labs(title="**A.** Confounding at baseline") + 
+  theme(plot.title = ggtext::element_markdown())
+
+## JMIR format
+fig_unadjust_jmir <- 
+  make_dag_rand_A(scale_node_size=0.5, text_size=3.5) + 
+  labs(title="**A.** Confounding at baseline") + 
+  theme(plot.title = ggtext::element_markdown(size=10))
+
+## JMIR TOC figure
+fig_dag_unadjust_jmir_toc <- 
+  make_dag_rand_A(scale_node_size=0.5, text_size=3.5) + 
+  theme(
+    plot.title = ggtext::element_markdown(size=10),
+    panel.background = element_rect(fill = "white", color=NA), 
+    plot.background = element_rect(fill = "white", color=NA)
+  )
+
 # *********************************************************************** #
-#              Generate second figure without confounding                 #
+#                  Generate panel B without confounding                   #
 # *********************************************************************** #
 
+#note: starts based on 'dag_rand_generic' created above, but colors and path updated to highlight adjustment
+  
+# ********************************************** #
+#              Labelling and colors              #
+# ********************************************** #
+  
 # Use default color to draw attention to the path of interests
 default_colour <- "black"
 highlight_colour <- "darkgray" 
 
 # Add colors
-dag_rand2 <- 
-  dag_rand  |>
+dag_rand_adjust <- 
+  dag_rand_generic  |>
   mutate(
     # Color of point/edge/lines
     name_colour = highlight_colour,
@@ -642,8 +677,8 @@ name_colour <-
   )
 
 # add nodes label for ggplot
-dag_rand_labels2 <-
-  data.frame(dag_rand2) |>
+dag_rand_adjust_labels <-
+  data.frame(dag_rand_adjust) |>
   dplyr::mutate(
     label = case_when(
     name =="X0"~"X\u2080",
@@ -658,51 +693,82 @@ dag_rand_labels2 <-
 #             Create DAG with ggplot             #
 # ********************************************** #
 
-dag_adjust <-
-  dag_rand2  |>
+make_dag_rand_B <- function(scale_node_size=1, text_size=4, default_node_size=16){
+  
+  # calculate node size as a factor x default
+  node_size <- default_node_size * scale_node_size
+
+fig_dag_rand_adjust <-
+  dag_rand_adjust  |>
   ggplot(aes(
     x = x,
     y = y,
     xend = xend,
     yend = yend
   )) +
-  #geom_dag_point() +
-  geom_dag_point(aes(colour = name),show.legend=FALSE) +
-  #geom_dag_edges() +
+  geom_dag_point(aes(colour = name),size = node_size,show.legend=FALSE) +
   geom_dag_edges(aes(edge_colour   = name_colour,
                      edge_linetype = name_line)) +
-  #geom_dag_edges_arc(aes(xend=xend_arc,yend=yend_arc), curvature=0.25) +
   geom_dag_edges_arc(aes(xend         = xend_arc,
                         yend          = yend_arc,
                         edge_colour   = name_colour,
                         edge_linetype = name_line),curvature=0.25) +
   scale_colour_manual(values = name_colour) +
-  geom_dag_text(aes(label=dag_rand_labels2), size=7) +
+  geom_dag_text(aes(label=dag_rand_adjust_labels), size=text_size) +
   theme_dag()
+
+return(fig_dag_rand_adjust)
+
+}
+
+# Generate figure for different layout
+
+## normal version
+fig_adjust_normal <- 
+  make_dag_rand_B(text_size=7) + 
+  labs(title="**B.** Successful emulation of randomization") +
+  theme(plot.title = ggtext::element_markdown())
+
+## JMIR format
+fig_adjust_jmir <- 
+  make_dag_rand_B(scale_node_size=0.5, text_size=3.5) + 
+  labs(title="**B.** Successful emulation of randomization") +
+  theme(plot.title = ggtext::element_markdown(size=10))
 
 # *********************************************************************** #
 #                Append both DAG with/without confounding                 #
 # *********************************************************************** #
 
-fig_dag_rand <- 
-  (dag_unadjust + labs(title="**A.** Confounding at baseline") + 
-     theme(plot.title = ggtext::element_markdown())) / 
-  (dag_adjust + labs(title="**B.** Successful emulation of randomization") + 
-     theme(plot.title = ggtext::element_markdown()))
+# note: done using patchwork library
 
+fig_dag_rand_normal <- fig_unadjust_normal / fig_adjust_normal
+
+fig_dag_rand_jmir <- fig_unadjust_jmir / fig_adjust_jmir
+
+ 
 # ********************************************** #
 #                Save as png/pdf                 #
 # ********************************************** #
   
-  ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand.pdf"),
-        plot=fig_dag_rand, dpi=300, width=8,height=8, units="in",scale=1,device = cairo_pdf)
+# Normal version, pdf and png
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand.pdf"),
+                plot=fig_dag_rand_normal, dpi=300, width=8,height=8, units="in",scale=1,device = cairo_pdf)
 
-  ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand.png"),
-         plot=fig_dag_rand, dpi=300, width=8,height=8, units="in",scale=1)
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand.png"),
+                plot=fig_dag_rand_normal, dpi=300, width=8,height=8, units="in",scale=1)
+
+# JMIR scaling (max. 1200x1200)
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand_jmir.png"),
+                plot=fig_dag_rand_jmir, dpi=300, width=1200,height=1200, units="px",scale=1)
+
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand_jmir.pdf"),
+                plot=fig_dag_rand_jmir, dpi=300, width=1200,height=1200, units="px",scale=1, device = cairo_pdf)
+
+# JMIR scaling, for TOC (max. 1200x900)
+ggplot2::ggsave(file.path(dir_fig,"fig_dag_unadjust_jmir_toc.png"),
+                plot=fig_dag_unadjust_jmir_toc, dpi=300, width=1200,height=800, units="px",scale=1)
+
   
-  ggplot2::ggsave(file.path(dir_fig,"fig_dag_rand_jmir.png"),
-       plot=fig_dag_rand, dpi=300, width=1200,height=1200, units="px",scale=1)
-
 # ********************************************** #
 #              Load rendered figure              #
 # ********************************************** #
