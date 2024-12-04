@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Didier Brassard">
-<meta name="dcterms.date" content="2024-05-30">
+<meta name="dcterms.date" content="2024-12-04">
 
 <title>Brassard, Presse &amp; Chevalier, 2024 - Raw data cleaning and processing to generate Health Canada diet simulation data</title>
 <style>
@@ -189,7 +189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 30, 2024</p>
+      <p class="date">December 4, 2024</p>
     </div>
   </div>
   
@@ -270,91 +270,93 @@ Attaching package: 'janitor'</code></pre>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hefi2019) <span class="co"># Install with &lt;devtools::install_github("didierbrassard/hefi2019")&gt;</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="do">## presentation</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">## project</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'gt' was built under R version 4.3.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## project</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>here() starts at /Users/DidierBrassard/RStudio/NuAge_protocol</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## suppress scientific notation</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">9999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## suppress scientific notation</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">9999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                  Directories                   #</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Local directory</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>dir_scripts <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"scripts"</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>dir_metadata <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"metadata"</span>)</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>dir_processed <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"processed"</span>)</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>dir_raw <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>,<span class="st">"raw"</span>)</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>dir_results <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"results"</span>)</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>dir_temp <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>,<span class="st">"temp"</span>)</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">dir.exists</span>(dir_temp)<span class="sc">==</span><span class="cn">FALSE</span>){</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_temp)</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                  Directories                   #</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Local directory</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>dir_scripts <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"scripts"</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>dir_metadata <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"metadata"</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>dir_processed <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"processed"</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>dir_raw <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>,<span class="st">"raw"</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>dir_results <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"results"</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>dir_temp <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>,<span class="st">"temp"</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">dir.exists</span>(dir_temp)<span class="sc">==</span><span class="cn">FALSE</span>){</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_temp)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#            Load functions and data             #</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">file.path</span>(dir_scripts, <span class="st">"save_and_summarize_data.R"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#            Load functions and data             #</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">file.path</span>(dir_scripts, <span class="st">"save_and_summarize_data.R"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Preparing Health Canada diet simulation ####</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># *********************************************************************** #</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                Preparing Health Canada diet simulation                  #</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># *********************************************************************** #</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Objective:</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) read and format simulation data;</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) output table of dietary constituents and nutrients (1 diet = wide format)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Preparing Health Canada diet simulation ####</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># *********************************************************************** #</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                Preparing Health Canada diet simulation                  #</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># *********************************************************************** #</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Objective:</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) read and format simulation data;</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) output table of dietary constituents and nutrients (1 diet = wide format)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### 1) Download/read data #####</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#               Download/read data               #</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Omnivore</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">file.exists</span>(<span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_omni.xlsx"</span>))<span class="sc">==</span><span class="cn">FALSE</span>){</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="st">"https://open.canada.ca/data/dataset/0490749d-b0b0-410a-9577-a903c6cec2be/resource/94064331-b1b9-41f5-9ba8-1bf77b880053/download/simulated-composite-diets-omnivore.xlsx"</span>,</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">destfile =</span><span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_omni.xlsx"</span>))</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"dir_raw/HC_simulated_omni.xlsx found. Date modified:"</span>, <span class="fu">file.info</span>(<span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_omni.xlsx"</span>))<span class="sc">$</span>mtime)</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### 1) Download/read data #####</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#               Download/read data               #</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Omnivore</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">file.exists</span>(<span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_omni.xlsx"</span>))<span class="sc">==</span><span class="cn">FALSE</span>){</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="st">"https://open.canada.ca/data/dataset/0490749d-b0b0-410a-9577-a903c6cec2be/resource/94064331-b1b9-41f5-9ba8-1bf77b880053/download/simulated-composite-diets-omnivore.xlsx"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">destfile =</span><span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_omni.xlsx"</span>))</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"dir_raw/HC_simulated_omni.xlsx found. Date modified:"</span>, <span class="fu">file.info</span>(<span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_omni.xlsx"</span>))<span class="sc">$</span>mtime)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>dir_raw/HC_simulated_omni.xlsx found. Date modified:2024-05-29 14:50:11.318581</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Omnivore, no beverages</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">file.exists</span>(<span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_omni_nobev.xlsx"</span>))<span class="sc">==</span><span class="cn">FALSE</span>){</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="st">"https://open.canada.ca/data/dataset/0490749d-b0b0-410a-9577-a903c6cec2be/resource/66919cac-5d2d-4617-be01-9faafd539f2f/download/simulated-composite-diets-omnivore-no-healthy-beverages.xlsx"</span>,</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">destfile =</span><span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_omni_nobev.xlsx"</span>))</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"dir_raw/HC_simulated_omni_nobev.xlsx found. Date modified:"</span>, <span class="fu">file.info</span>(<span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_omni_nobev.xlsx"</span>))<span class="sc">$</span>mtime)</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Omnivore, no beverages</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">file.exists</span>(<span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_omni_nobev.xlsx"</span>))<span class="sc">==</span><span class="cn">FALSE</span>){</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="st">"https://open.canada.ca/data/dataset/0490749d-b0b0-410a-9577-a903c6cec2be/resource/66919cac-5d2d-4617-be01-9faafd539f2f/download/simulated-composite-diets-omnivore-no-healthy-beverages.xlsx"</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">destfile =</span><span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_omni_nobev.xlsx"</span>))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"dir_raw/HC_simulated_omni_nobev.xlsx found. Date modified:"</span>, <span class="fu">file.info</span>(<span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_omni_nobev.xlsx"</span>))<span class="sc">$</span>mtime)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>dir_raw/HC_simulated_omni_nobev.xlsx found. Date modified:2024-05-29 14:50:11.322398</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lacto-ovo-vege</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">file.exists</span>(<span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_vege.xlsx"</span>))<span class="sc">==</span><span class="cn">FALSE</span>){</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="st">"https://open.canada.ca/data/dataset/0490749d-b0b0-410a-9577-a903c6cec2be/resource/3813380e-9978-4d19-995b-c4617ad58019/download/simulated-composite-diets-lacto-ovo-vegetarian.xlsx"</span>,</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">destfile =</span><span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_vege.xlsx"</span>))</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"dir_raw/HC_simulated_vege.xlsx found. Date modified:"</span>, <span class="fu">file.info</span>(<span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_vege.xlsx"</span>))<span class="sc">$</span>mtime)</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lacto-ovo-vege</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">file.exists</span>(<span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_vege.xlsx"</span>))<span class="sc">==</span><span class="cn">FALSE</span>){</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="st">"https://open.canada.ca/data/dataset/0490749d-b0b0-410a-9577-a903c6cec2be/resource/3813380e-9978-4d19-995b-c4617ad58019/download/simulated-composite-diets-lacto-ovo-vegetarian.xlsx"</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">destfile =</span><span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_vege.xlsx"</span>))</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"dir_raw/HC_simulated_vege.xlsx found. Date modified:"</span>, <span class="fu">file.info</span>(<span class="fu">file.path</span>(dir_raw,<span class="st">"HC_simulated_vege.xlsx"</span>))<span class="sc">$</span>mtime)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>dir_raw/HC_simulated_vege.xlsx found. Date modified:2024-05-29 14:50:11.325357</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### 2) Function to read and output data #####</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">#        Function to read and output data        #</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### 2) Function to read and output data #####</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#        Function to read and output data        #</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Read Nutrient Data and Output</p>
 <p>This function reads diet simulation data from an Excel file, performs some cleaning operations, and outputs a list containing serving data, total nutrients, and composite food-specific nutrients.</p>
@@ -364,60 +366,60 @@ Attaching package: 'janitor'</code></pre>
 <p><span class="citation" data-cites="import">@import</span> readxl <span class="citation" data-cites="import">@import</span> janitor <span class="citation" data-cites="import">@import</span> stringr <span class="citation" data-cites="import">@import</span> dplyr</p>
 <p><span class="citation" data-cites="export">@export</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>read_n_output <span class="ot">&lt;-</span> <span class="cf">function</span>(hc_file, dri_group, <span class="at">total_rownb =</span> <span class="dv">20</span>) {</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="fu">paste0</span>(<span class="st">"Reading: "</span>,hc_file, <span class="st">"; sheet: "</span>, dri_group))</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Helper function for reading Excel data</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  read_excel_data <span class="ot">&lt;-</span> <span class="cf">function</span>(range) {</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    readxl<span class="sc">::</span><span class="fu">read_excel</span>(</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">file.path</span>(dir_raw, hc_file),</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">sheet =</span> dri_group,</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">range =</span> range</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Composite food serving ...</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Composite servings</span></span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  serving <span class="ot">&lt;-</span> <span class="fu">read_excel_data</span>(<span class="fu">paste0</span>(<span class="st">"A3:C"</span>, total_rownb<span class="dv">-1</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>x3) <span class="sc">|&gt;</span></span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">"NB_RA"</span>, <span class="st">"COMPOSITE"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">COMPOSITE =</span> stringr<span class="sc">::</span><span class="fu">str_squish</span>(COMPOSITE)) <span class="sc">|&gt;</span></span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(COMPOSITE, NB_RA)</span>
-<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Total nutrients</span></span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Total nutrient ...</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>  varnames_nut <span class="ot">&lt;-</span> <span class="fu">read_excel_data</span>(<span class="st">"E2:AJ3"</span>) <span class="sc">|&gt;</span> <span class="fu">names</span>()</span>
-<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>  total_nut <span class="ot">&lt;-</span> <span class="fu">read_excel_data</span>(<span class="fu">paste0</span>(<span class="st">"E3:AJ"</span>, total_rownb)) <span class="sc">|&gt;</span></span>
-<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
-<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setNames</span>(varnames_nut) </span>
-<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Composite food-specific nutrients</span></span>
-<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Composite food-specific nutrients ...</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>  composite_nut <span class="ot">&lt;-</span> <span class="fu">read_excel_data</span>(<span class="fu">paste0</span>(<span class="st">"A3:AJ"</span>, total_rownb<span class="dv">-1</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
-<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">remove_empty</span>(<span class="at">which =</span> <span class="st">"cols"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">"NB_RA"</span>, <span class="st">"COMPOSITE"</span>, varnames_nut)) <span class="sc">|&gt;</span></span>
-<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">COMPOSITE =</span> stringr<span class="sc">::</span><span class="fu">str_squish</span>(COMPOSITE))</span>
-<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(serving, total_nut, composite_nut))  </span>
-<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>read_n_output <span class="ot">&lt;-</span> <span class="cf">function</span>(hc_file, dri_group, <span class="at">total_rownb =</span> <span class="dv">20</span>) {</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="fu">paste0</span>(<span class="st">"Reading: "</span>,hc_file, <span class="st">"; sheet: "</span>, dri_group))</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Helper function for reading Excel data</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  read_excel_data <span class="ot">&lt;-</span> <span class="cf">function</span>(range) {</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    readxl<span class="sc">::</span><span class="fu">read_excel</span>(</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">file.path</span>(dir_raw, hc_file),</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">sheet =</span> dri_group,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">range =</span> range</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Composite food serving ...</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Composite servings</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  serving <span class="ot">&lt;-</span> <span class="fu">read_excel_data</span>(<span class="fu">paste0</span>(<span class="st">"A3:C"</span>, total_rownb<span class="dv">-1</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>x3) <span class="sc">|&gt;</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">"NB_RA"</span>, <span class="st">"COMPOSITE"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">COMPOSITE =</span> stringr<span class="sc">::</span><span class="fu">str_squish</span>(COMPOSITE)) <span class="sc">|&gt;</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(COMPOSITE, NB_RA)</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Total nutrients</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Total nutrient ...</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>  varnames_nut <span class="ot">&lt;-</span> <span class="fu">read_excel_data</span>(<span class="st">"E2:AJ3"</span>) <span class="sc">|&gt;</span> <span class="fu">names</span>()</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>  total_nut <span class="ot">&lt;-</span> <span class="fu">read_excel_data</span>(<span class="fu">paste0</span>(<span class="st">"E3:AJ"</span>, total_rownb)) <span class="sc">|&gt;</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setNames</span>(varnames_nut) </span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Composite food-specific nutrients</span></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Composite food-specific nutrients ...</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>  composite_nut <span class="ot">&lt;-</span> <span class="fu">read_excel_data</span>(<span class="fu">paste0</span>(<span class="st">"A3:AJ"</span>, total_rownb<span class="dv">-1</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">remove_empty</span>(<span class="at">which =</span> <span class="st">"cols"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">"NB_RA"</span>, <span class="st">"COMPOSITE"</span>, varnames_nut)) <span class="sc">|&gt;</span></span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">COMPOSITE =</span> stringr<span class="sc">::</span><span class="fu">str_squish</span>(COMPOSITE))</span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(serving, total_nut, composite_nut))  </span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### 3) Apply function to each DRI group #####</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#        Apply function to each DRI group        #</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co"># note: using omnivore diets with beverage as most likely reflect majority of Canadians</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>hc_file <span class="ot">&lt;-</span> <span class="st">"HC_simulated_omni.xlsx"</span></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>drig12 <span class="ot">&lt;-</span> </span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_n_output</span>(</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    hc_file  ,</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">dri_group   =</span> <span class="st">"M 51-70"</span>,</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_rownb =</span> <span class="dv">19</span></span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### 3) Apply function to each DRI group #####</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#        Apply function to each DRI group        #</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># note: using omnivore diets with beverage as most likely reflect majority of Canadians</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>hc_file <span class="ot">&lt;-</span> <span class="st">"HC_simulated_omni.xlsx"</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>drig12 <span class="ot">&lt;-</span> </span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_n_output</span>(</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    hc_file  ,</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">dri_group   =</span> <span class="st">"M 51-70"</span>,</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_rownb =</span> <span class="dv">19</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Reading: HC_simulated_omni.xlsx; sheet: M 51-70</code></pre>
 </div>
@@ -516,12 +518,12 @@ mutate: no changes
 • `` -&gt; `...35`
 • `` -&gt; `...36`</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>drig14 <span class="ot">&lt;-</span> </span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_n_output</span>(</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    hc_file  ,</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">dri_group   =</span> <span class="st">"M 70 +"</span>,</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_rownb =</span> <span class="dv">22</span></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>drig14 <span class="ot">&lt;-</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_n_output</span>(</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    hc_file  ,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">dri_group   =</span> <span class="st">"M 70 +"</span>,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_rownb =</span> <span class="dv">22</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Reading: HC_simulated_omni.xlsx; sheet: M 70 +</code></pre>
 </div>
@@ -618,12 +620,12 @@ mutate: no changes
 • `` -&gt; `...35`
 • `` -&gt; `...36`</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>drig13 <span class="ot">&lt;-</span> </span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_n_output</span>(</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    hc_file  ,</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">dri_group   =</span> <span class="st">"F 51-70"</span>,</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_rownb =</span> <span class="dv">20</span></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>drig13 <span class="ot">&lt;-</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_n_output</span>(</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    hc_file  ,</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">dri_group   =</span> <span class="st">"F 51-70"</span>,</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_rownb =</span> <span class="dv">20</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Reading: HC_simulated_omni.xlsx; sheet: F 51-70</code></pre>
 </div>
@@ -720,12 +722,12 @@ mutate: no changes
 • `` -&gt; `...35`
 • `` -&gt; `...36`</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>drig15 <span class="ot">&lt;-</span> </span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_n_output</span>(</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    hc_file ,</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">dri_group   =</span> <span class="st">"F 70 +"</span>,</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_rownb =</span> <span class="dv">20</span></span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>drig15 <span class="ot">&lt;-</span> </span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_n_output</span>(</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    hc_file ,</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">dri_group   =</span> <span class="st">"F 70 +"</span>,</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_rownb =</span> <span class="dv">20</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Reading: HC_simulated_omni.xlsx; sheet: F 70 +</code></pre>
 </div>
@@ -824,10 +826,10 @@ mutate: no changes
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### 4) Calculate total intakes for each DRI group #####</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   Calculate total intakes for each DRI group   #</span></span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### 4) Calculate total intakes for each DRI group #####</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   Calculate total intakes for each DRI group   #</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Calculate DRI group Nutrients</p>
 <p>This function calculates nutrient summary for a specific DRI group.</p>
@@ -837,36 +839,36 @@ mutate: no changes
 <p><span class="citation" data-cites="import">@import</span> dplyr</p>
 <p><span class="citation" data-cites="export">@export</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>calculate_drig_nutrients <span class="ot">&lt;-</span> <span class="cf">function</span>(drig, drig_suffix, <span class="at">nut_list =</span> <span class="fu">c</span>(<span class="st">"EKC"</span>,<span class="st">"FSUG"</span>,<span class="st">"FAS"</span>,<span class="st">"FAM"</span>,<span class="st">"FAP"</span>,<span class="st">"SOD"</span>,<span class="st">"PRO"</span>)) {</span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Output detailed summary to calculate fat intake (missing)</span></span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  all_but_total <span class="ot">&lt;-</span> drig[[<span class="dv">2</span>]][<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(drig[[<span class="dv">2</span>]])<span class="sc">-</span><span class="dv">1</span>,]</span>
-<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>  drig_nut <span class="ot">&lt;-</span></span>
-<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>    drig[[<span class="dv">2</span>]] <span class="sc">|&gt;</span></span>
-<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">all_of</span>(nut_list)) <span class="sc">|&gt;</span></span>
-<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_tail</span>() <span class="sc">|&gt;</span></span>
-<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>      <span class="co"># add missing nutrients</span></span>
-<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">FAM =</span> <span class="fu">sum</span>(all_but_total<span class="sc">$</span>FAM, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">FAP =</span> <span class="fu">sum</span>(all_but_total<span class="sc">$</span>FAP, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a>      <span class="co"># add drig id</span></span>
-<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">drig =</span> drig_suffix</span>
-<span id="cb62-16"><a href="#cb62-16" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb62-17"><a href="#cb62-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb62-18"><a href="#cb62-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(drig_nut)</span>
-<span id="cb62-19"><a href="#cb62-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb62-20"><a href="#cb62-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-21"><a href="#cb62-21" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
-<span id="cb62-22"><a href="#cb62-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   Apply function on list   #</span></span>
-<span id="cb62-23"><a href="#cb62-23" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
-<span id="cb62-24"><a href="#cb62-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-25"><a href="#cb62-25" aria-hidden="true" tabindex="-1"></a>drig_all <span class="ot">&lt;-</span> <span class="fu">list</span>(drig12, drig14, drig13, drig15)</span>
-<span id="cb62-26"><a href="#cb62-26" aria-hidden="true" tabindex="-1"></a>drig_suffix_all <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">14</span>, <span class="dv">13</span>, <span class="dv">15</span>)</span>
-<span id="cb62-27"><a href="#cb62-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-28"><a href="#cb62-28" aria-hidden="true" tabindex="-1"></a>drig_nut_all <span class="ot">&lt;-</span> </span>
-<span id="cb62-29"><a href="#cb62-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Map</span>(calculate_drig_nutrients, drig_all, drig_suffix_all) <span class="sc">|&gt;</span></span>
-<span id="cb62-30"><a href="#cb62-30" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">reduce</span>(rbind)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>calculate_drig_nutrients <span class="ot">&lt;-</span> <span class="cf">function</span>(drig, drig_suffix, <span class="at">nut_list =</span> <span class="fu">c</span>(<span class="st">"EKC"</span>,<span class="st">"FSUG"</span>,<span class="st">"FAS"</span>,<span class="st">"FAM"</span>,<span class="st">"FAP"</span>,<span class="st">"SOD"</span>,<span class="st">"PRO"</span>)) {</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Output detailed summary to calculate fat intake (missing)</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  all_but_total <span class="ot">&lt;-</span> drig[[<span class="dv">2</span>]][<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(drig[[<span class="dv">2</span>]])<span class="sc">-</span><span class="dv">1</span>,]</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>  drig_nut <span class="ot">&lt;-</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>    drig[[<span class="dv">2</span>]] <span class="sc">|&gt;</span></span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">all_of</span>(nut_list)) <span class="sc">|&gt;</span></span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_tail</span>() <span class="sc">|&gt;</span></span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>      <span class="co"># add missing nutrients</span></span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">FAM =</span> <span class="fu">sum</span>(all_but_total<span class="sc">$</span>FAM, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">FAP =</span> <span class="fu">sum</span>(all_but_total<span class="sc">$</span>FAP, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb64-14"><a href="#cb64-14" aria-hidden="true" tabindex="-1"></a>      <span class="co"># add drig id</span></span>
+<span id="cb64-15"><a href="#cb64-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">drig =</span> drig_suffix</span>
+<span id="cb64-16"><a href="#cb64-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb64-17"><a href="#cb64-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb64-18"><a href="#cb64-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(drig_nut)</span>
+<span id="cb64-19"><a href="#cb64-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb64-20"><a href="#cb64-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-21"><a href="#cb64-21" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
+<span id="cb64-22"><a href="#cb64-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   Apply function on list   #</span></span>
+<span id="cb64-23"><a href="#cb64-23" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
+<span id="cb64-24"><a href="#cb64-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-25"><a href="#cb64-25" aria-hidden="true" tabindex="-1"></a>drig_all <span class="ot">&lt;-</span> <span class="fu">list</span>(drig12, drig14, drig13, drig15)</span>
+<span id="cb64-26"><a href="#cb64-26" aria-hidden="true" tabindex="-1"></a>drig_suffix_all <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">14</span>, <span class="dv">13</span>, <span class="dv">15</span>)</span>
+<span id="cb64-27"><a href="#cb64-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-28"><a href="#cb64-28" aria-hidden="true" tabindex="-1"></a>drig_nut_all <span class="ot">&lt;-</span> </span>
+<span id="cb64-29"><a href="#cb64-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Map</span>(calculate_drig_nutrients, drig_all, drig_suffix_all) <span class="sc">|&gt;</span></span>
+<span id="cb64-30"><a href="#cb64-30" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">reduce</span>(rbind)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>select: dropped 25 variables (CAR, FI, SUG, FAT, FAL, …)
 slice_tail: removed 15 rows (94%), one row remaining
@@ -887,83 +889,83 @@ mutate: changed one value (100%) of 'FAM' (one fewer NA)
         changed one value (100%) of 'FAP' (one fewer NA)
         new variable 'drig' (double) with one unique value and 0% NA</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   Males, 51-70: drig=12    #</span></span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
-<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>drig12_ra <span class="ot">&lt;-</span> </span>
-<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>  drig12[[<span class="dv">1</span>]] <span class="sc">|&gt;</span></span>
-<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">drig=</span><span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre>
-</div>
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    Males, 71 +: drig=14    #</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   Males, 51-70: drig=12    #</span></span>
 <span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
 <span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>drig14_ra <span class="ot">&lt;-</span> </span>
-<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>  drig14[[<span class="dv">1</span>]] <span class="sc">|&gt;</span></span>
-<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">drig=</span><span class="dv">14</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>drig12_ra <span class="ot">&lt;-</span> </span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>  drig12[[<span class="dv">1</span>]] <span class="sc">|&gt;</span></span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">drig=</span><span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Females, 51-70: drig=13   #</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    Males, 71 +: drig=14    #</span></span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
 <span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>drig13_ra <span class="ot">&lt;-</span> </span>
-<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>  drig13[[<span class="dv">1</span>]] <span class="sc">|&gt;</span></span>
-<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">drig=</span><span class="dv">13</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>drig14_ra <span class="ot">&lt;-</span> </span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>  drig14[[<span class="dv">1</span>]] <span class="sc">|&gt;</span></span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">drig=</span><span class="dv">14</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    Males, 71 +: drig=15    #</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Females, 51-70: drig=13   #</span></span>
 <span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
 <span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>drig15_ra <span class="ot">&lt;-</span> </span>
-<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>  drig15[[<span class="dv">1</span>]] <span class="sc">|&gt;</span></span>
-<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">drig=</span><span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>drig13_ra <span class="ot">&lt;-</span> </span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>  drig13[[<span class="dv">1</span>]] <span class="sc">|&gt;</span></span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">drig=</span><span class="dv">13</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    Males, 71 +: drig=15    #</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>drig15_ra <span class="ot">&lt;-</span> </span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>  drig15[[<span class="dv">1</span>]] <span class="sc">|&gt;</span></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">drig=</span><span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### 5) Append data together #####</span></span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="co">#              Append data together              #</span></span>
-<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>dietsim_bydrig <span class="ot">&lt;-</span></span>
-<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(</span>
-<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a>    drig12_ra , drig14_ra , drig13_ra , drig15_ra) <span class="sc">|&gt;</span></span>
-<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add HEFI-2019 classification</span></span>
-<span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">hefi2019subgrp =</span></span>
-<span id="cb72-12"><a href="#cb72-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">case_when</span>(</span>
-<span id="cb72-13"><a href="#cb72-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">"TOTAL VEGETABLES"</span>,COMPOSITE)<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"vf"</span>,</span>
-<span id="cb72-14"><a href="#cb72-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">"TOTAL WHOLE"</span>,COMPOSITE)<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"wg"</span>,</span>
-<span id="cb72-15"><a href="#cb72-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">"ANIMAL-BASED"</span>,COMPOSITE)<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"pfab"</span>,</span>
-<span id="cb72-16"><a href="#cb72-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">"PLANT-BASED"</span>,COMPOSITE)<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"pfpb"</span>,</span>
-<span id="cb72-17"><a href="#cb72-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">"HEALTHY BEVERAGES"</span>,COMPOSITE)<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"milk_plantbev"</span>,</span>
-<span id="cb72-18"><a href="#cb72-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">"UNSATURATED OILS"</span>,COMPOSITE)<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"ufa"</span></span>
-<span id="cb72-19"><a href="#cb72-19" aria-hidden="true" tabindex="-1"></a>      ) <span class="co"># end of case_when</span></span>
-<span id="cb72-20"><a href="#cb72-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> <span class="co"># end of mutate</span></span>
-<span id="cb72-21"><a href="#cb72-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove non-hefi food groups (i.e., subclassification)</span></span>
-<span id="cb72-22"><a href="#cb72-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(hefi2019subgrp)<span class="sc">==</span><span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb72-23"><a href="#cb72-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Transpose long data to wide</span></span>
-<span id="cb72-24"><a href="#cb72-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>COMPOSITE) <span class="sc">|&gt;</span></span>
-<span id="cb72-25"><a href="#cb72-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
-<span id="cb72-26"><a href="#cb72-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from  =</span> <span class="st">"hefi2019subgrp"</span>,</span>
-<span id="cb72-27"><a href="#cb72-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> <span class="st">"NB_RA"</span></span>
-<span id="cb72-28"><a href="#cb72-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb72-29"><a href="#cb72-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add hefi-2019 nutrients</span></span>
-<span id="cb72-30"><a href="#cb72-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(</span>
-<span id="cb72-31"><a href="#cb72-31" aria-hidden="true" tabindex="-1"></a>    drig_nut_all,</span>
-<span id="cb72-32"><a href="#cb72-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"drig"</span></span>
-<span id="cb72-33"><a href="#cb72-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb72-34"><a href="#cb72-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ensure variable names are not capital letters</span></span>
-<span id="cb72-35"><a href="#cb72-35" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### 5) Append data together #####</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a><span class="co">#              Append data together              #</span></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>dietsim_bydrig <span class="ot">&lt;-</span></span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(</span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>    drig12_ra , drig14_ra , drig13_ra , drig15_ra) <span class="sc">|&gt;</span></span>
+<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb74-10"><a href="#cb74-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add HEFI-2019 classification</span></span>
+<span id="cb74-11"><a href="#cb74-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">hefi2019subgrp =</span></span>
+<span id="cb74-12"><a href="#cb74-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">case_when</span>(</span>
+<span id="cb74-13"><a href="#cb74-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">"TOTAL VEGETABLES"</span>,COMPOSITE)<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"vf"</span>,</span>
+<span id="cb74-14"><a href="#cb74-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">"TOTAL WHOLE"</span>,COMPOSITE)<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"wg"</span>,</span>
+<span id="cb74-15"><a href="#cb74-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">"ANIMAL-BASED"</span>,COMPOSITE)<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"pfab"</span>,</span>
+<span id="cb74-16"><a href="#cb74-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">"PLANT-BASED"</span>,COMPOSITE)<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"pfpb"</span>,</span>
+<span id="cb74-17"><a href="#cb74-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">"HEALTHY BEVERAGES"</span>,COMPOSITE)<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"milk_plantbev"</span>,</span>
+<span id="cb74-18"><a href="#cb74-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grepl</span>(<span class="st">"UNSATURATED OILS"</span>,COMPOSITE)<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"ufa"</span></span>
+<span id="cb74-19"><a href="#cb74-19" aria-hidden="true" tabindex="-1"></a>      ) <span class="co"># end of case_when</span></span>
+<span id="cb74-20"><a href="#cb74-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> <span class="co"># end of mutate</span></span>
+<span id="cb74-21"><a href="#cb74-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove non-hefi food groups (i.e., subclassification)</span></span>
+<span id="cb74-22"><a href="#cb74-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(hefi2019subgrp)<span class="sc">==</span><span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb74-23"><a href="#cb74-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Transpose long data to wide</span></span>
+<span id="cb74-24"><a href="#cb74-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>COMPOSITE) <span class="sc">|&gt;</span></span>
+<span id="cb74-25"><a href="#cb74-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb74-26"><a href="#cb74-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from  =</span> <span class="st">"hefi2019subgrp"</span>,</span>
+<span id="cb74-27"><a href="#cb74-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> <span class="st">"NB_RA"</span></span>
+<span id="cb74-28"><a href="#cb74-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb74-29"><a href="#cb74-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add hefi-2019 nutrients</span></span>
+<span id="cb74-30"><a href="#cb74-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(</span>
+<span id="cb74-31"><a href="#cb74-31" aria-hidden="true" tabindex="-1"></a>    drig_nut_all,</span>
+<span id="cb74-32"><a href="#cb74-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"drig"</span></span>
+<span id="cb74-33"><a href="#cb74-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb74-34"><a href="#cb74-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ensure variable names are not capital letters</span></span>
+<span id="cb74-35"><a href="#cb74-35" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>mutate: new variable 'hefi2019subgrp' (character) with 7 unique values and 63% NA
 filter: removed 41 rows (63%), 24 rows remaining
@@ -976,23 +978,23 @@ full_join: added 7 columns (EKC, FSUG, FAS, FAM, FAP, …)
            &gt;                                        ===
            &gt; rows total                              4</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate an 'overall' row</span></span>
-<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>dietsim_drig0 <span class="ot">&lt;-</span> </span>
-<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  dietsim_bydrig <span class="sc">|&gt;</span></span>
-<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate mean</span></span>
-<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="at">.cols=</span><span class="fu">all_of</span>(<span class="fu">names</span>(dietsim_bydrig[<span class="sc">-</span><span class="dv">1</span>])),</span>
-<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>           <span class="cf">function</span>(x) <span class="fu">mean</span>(x),</span>
-<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">.names =</span><span class="st">"{col}"</span> )</span>
-<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb74-10"><a href="#cb74-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb74-11"><a href="#cb74-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">drig=</span><span class="dv">0</span></span>
-<span id="cb74-12"><a href="#cb74-12" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate an 'overall' row</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>dietsim_drig0 <span class="ot">&lt;-</span> </span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  dietsim_bydrig <span class="sc">|&gt;</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate mean</span></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="at">.cols=</span><span class="fu">all_of</span>(<span class="fu">names</span>(dietsim_bydrig[<span class="sc">-</span><span class="dv">1</span>])),</span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>           <span class="cf">function</span>(x) <span class="fu">mean</span>(x),</span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">.names =</span><span class="st">"{col}"</span> )</span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">drig=</span><span class="dv">0</span></span>
+<span id="cb76-12"><a href="#cb76-12" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>summarise: now one row and 13 columns, ungrouped
 mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dietsim_drig0); <span class="fu">head</span>(dietsim_drig0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dietsim_drig0); <span class="fu">head</span>(dietsim_drig0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  1 14</code></pre>
 </div>
@@ -1003,24 +1005,24 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
 1  9.03  3.92  2.04  1.88             1     1 1865.  6.37  10.2  21.5  20.1
 # ℹ 3 more variables: sod &lt;dbl&gt;, pro &lt;dbl&gt;, drig &lt;dbl&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add 'overall' row to drig-specific rows</span></span>
-<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>dietsim <span class="ot">&lt;-</span> </span>
-<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(dietsim_bydrig, dietsim_drig0) <span class="sc">|&gt;</span></span>
-<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(drig) <span class="sc">|&gt;</span></span>
-<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">drig_f =</span> </span>
-<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">factor</span>(drig,</span>
-<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">14</span>, <span class="dv">15</span>),</span>
-<span id="cb79-9"><a href="#cb79-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Male and female, 51 y or older"</span>,</span>
-<span id="cb79-10"><a href="#cb79-10" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Male, 51-70 y"</span>,</span>
-<span id="cb79-11"><a href="#cb79-11" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Female, 51-70 y"</span>,</span>
-<span id="cb79-12"><a href="#cb79-12" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Male, 71y+"</span>,</span>
-<span id="cb79-13"><a href="#cb79-13" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Female, 71y+"</span>))</span>
-<span id="cb79-14"><a href="#cb79-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add 'overall' row to drig-specific rows</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>dietsim <span class="ot">&lt;-</span> </span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(dietsim_bydrig, dietsim_drig0) <span class="sc">|&gt;</span></span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(drig) <span class="sc">|&gt;</span></span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">drig_f =</span> </span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">factor</span>(drig,</span>
+<span id="cb81-8"><a href="#cb81-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">14</span>, <span class="dv">15</span>),</span>
+<span id="cb81-9"><a href="#cb81-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Male and female, 51 y or older"</span>,</span>
+<span id="cb81-10"><a href="#cb81-10" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Male, 51-70 y"</span>,</span>
+<span id="cb81-11"><a href="#cb81-11" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Female, 51-70 y"</span>,</span>
+<span id="cb81-12"><a href="#cb81-12" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Male, 71y+"</span>,</span>
+<span id="cb81-13"><a href="#cb81-13" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Female, 71y+"</span>))</span>
+<span id="cb81-14"><a href="#cb81-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>mutate: new variable 'drig_f' (factor) with 5 unique values and 0% NA</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dietsim); <span class="fu">names</span>(dietsim); <span class="fu">head</span>(dietsim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dietsim); <span class="fu">names</span>(dietsim); <span class="fu">head</span>(dietsim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  5 15</code></pre>
 </div>
@@ -1041,63 +1043,63 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
 5    15  7.71  3     1.72  1.56             1     1 1507.  5.87  8.71  18.5
 # ℹ 4 more variables: fap &lt;dbl&gt;, sod &lt;dbl&gt;, pro &lt;dbl&gt;, drig_f &lt;fct&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="co">#         Add labels         #</span></span>
-<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
-<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>labelled<span class="sc">::</span><span class="fu">var_label</span>(dietsim) <span class="ot">&lt;-</span></span>
-<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
-<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">drig          =</span> <span class="st">"DRI age and sex group"</span>,</span>
-<span id="cb85-8"><a href="#cb85-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">drig_f        =</span> <span class="st">"DRI age and sex group"</span>,</span>
-<span id="cb85-9"><a href="#cb85-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">vf            =</span> <span class="st">"Vegetables and fruits, RA/d"</span>,</span>
-<span id="cb85-10"><a href="#cb85-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">wg            =</span> <span class="st">"Whole-grain foods, RA/d"</span>,</span>
-<span id="cb85-11"><a href="#cb85-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">pfpb          =</span> <span class="st">"Protein foods, plant-based, RA/d"</span>,</span>
-<span id="cb85-12"><a href="#cb85-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">pfab          =</span> <span class="st">"Protein foods, animal-based, RA/d"</span>,</span>
-<span id="cb85-13"><a href="#cb85-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">milk_plantbev =</span> <span class="st">"Unsweetened milk and plant beverage with protein, RA/d"</span>,</span>
-<span id="cb85-14"><a href="#cb85-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">ufa           =</span> <span class="st">"Unsaturated fats, RA/d"</span>,</span>
-<span id="cb85-15"><a href="#cb85-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">ekc           =</span> <span class="st">"Total energy intake, kcal/d"</span>,</span>
-<span id="cb85-16"><a href="#cb85-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">fsug          =</span> <span class="st">"Free sugars, grams/d"</span>,</span>
-<span id="cb85-17"><a href="#cb85-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">fas           =</span> <span class="st">"Saturated fats, grams/d"</span>,</span>
-<span id="cb85-18"><a href="#cb85-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">fam           =</span> <span class="st">"Monounsaturated fats, grams/d"</span>,</span>
-<span id="cb85-19"><a href="#cb85-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">fap           =</span> <span class="st">"Polyunsaturated fats, grams/d"</span>,</span>
-<span id="cb85-20"><a href="#cb85-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">sod           =</span> <span class="st">"Sodium, mg/d"</span>,</span>
-<span id="cb85-21"><a href="#cb85-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">pro           =</span> <span class="st">"Protein, grams/d"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="co">#         Add labels         #</span></span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>labelled<span class="sc">::</span><span class="fu">var_label</span>(dietsim) <span class="ot">&lt;-</span></span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">drig          =</span> <span class="st">"DRI age and sex group"</span>,</span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">drig_f        =</span> <span class="st">"DRI age and sex group"</span>,</span>
+<span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">vf            =</span> <span class="st">"Vegetables and fruits, RA/d"</span>,</span>
+<span id="cb87-10"><a href="#cb87-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">wg            =</span> <span class="st">"Whole-grain foods, RA/d"</span>,</span>
+<span id="cb87-11"><a href="#cb87-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">pfpb          =</span> <span class="st">"Protein foods, plant-based, RA/d"</span>,</span>
+<span id="cb87-12"><a href="#cb87-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">pfab          =</span> <span class="st">"Protein foods, animal-based, RA/d"</span>,</span>
+<span id="cb87-13"><a href="#cb87-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">milk_plantbev =</span> <span class="st">"Unsweetened milk and plant beverage with protein, RA/d"</span>,</span>
+<span id="cb87-14"><a href="#cb87-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">ufa           =</span> <span class="st">"Unsaturated fats, RA/d"</span>,</span>
+<span id="cb87-15"><a href="#cb87-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">ekc           =</span> <span class="st">"Total energy intake, kcal/d"</span>,</span>
+<span id="cb87-16"><a href="#cb87-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">fsug          =</span> <span class="st">"Free sugars, grams/d"</span>,</span>
+<span id="cb87-17"><a href="#cb87-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">fas           =</span> <span class="st">"Saturated fats, grams/d"</span>,</span>
+<span id="cb87-18"><a href="#cb87-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">fam           =</span> <span class="st">"Monounsaturated fats, grams/d"</span>,</span>
+<span id="cb87-19"><a href="#cb87-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">fap           =</span> <span class="st">"Polyunsaturated fats, grams/d"</span>,</span>
+<span id="cb87-20"><a href="#cb87-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">sod           =</span> <span class="st">"Sodium, mg/d"</span>,</span>
+<span id="cb87-21"><a href="#cb87-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">pro           =</span> <span class="st">"Protein, grams/d"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Calculate HEFI-2019 scores ####</span></span>
-<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a><span class="co">#           Calculate HEFI-2019 scores           #</span></span>
-<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the hefi-2019 scoring algorithm</span></span>
-<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb86-8"><a href="#cb86-8" aria-hidden="true" tabindex="-1"></a>dietsim_hefi <span class="ot">&lt;-</span></span>
-<span id="cb86-9"><a href="#cb86-9" aria-hidden="true" tabindex="-1"></a>  dietsim <span class="sc">|&gt;</span></span>
-<span id="cb86-10"><a href="#cb86-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb86-11"><a href="#cb86-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Change milk_plantbev RA to grams</span></span>
-<span id="cb86-12"><a href="#cb86-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">milk_plantbev =</span> milk_plantbev<span class="sc">*</span><span class="dv">258</span>,</span>
-<span id="cb86-13"><a href="#cb86-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Without further information for milk_plantbev = split half/half</span></span>
-<span id="cb86-14"><a href="#cb86-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">milk =</span> milk_plantbev<span class="sc">/</span><span class="dv">2</span>,</span>
-<span id="cb86-15"><a href="#cb86-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">plantbev =</span> milk_plantbev<span class="sc">/</span><span class="dv">2</span></span>
-<span id="cb86-16"><a href="#cb86-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb86-17"><a href="#cb86-17" aria-hidden="true" tabindex="-1"></a>  hefi2019<span class="sc">::</span><span class="fu">hefi2019</span>(<span class="co">#indata      = dietsim,</span></span>
-<span id="cb86-18"><a href="#cb86-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">vegfruits          =</span> vf,</span>
-<span id="cb86-19"><a href="#cb86-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">wholegrfoods       =</span> wg,</span>
-<span id="cb86-20"><a href="#cb86-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">nonwholegrfoods    =</span> <span class="dv">0</span>,</span>
-<span id="cb86-21"><a href="#cb86-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">profoodsanimal     =</span> pfab,</span>
-<span id="cb86-22"><a href="#cb86-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">profoodsplant      =</span> pfpb,</span>
-<span id="cb86-23"><a href="#cb86-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">otherfoods         =</span> <span class="dv">0</span>,</span>
-<span id="cb86-24"><a href="#cb86-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">waterhealthybev    =</span> <span class="dv">0</span>,</span>
-<span id="cb86-25"><a href="#cb86-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">unsweetmilk        =</span> milk,</span>
-<span id="cb86-26"><a href="#cb86-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">unsweetplantbevpro =</span> plantbev,</span>
-<span id="cb86-27"><a href="#cb86-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">otherbeverages     =</span> <span class="dv">0</span> ,</span>
-<span id="cb86-28"><a href="#cb86-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">mufat              =</span> fam ,</span>
-<span id="cb86-29"><a href="#cb86-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">pufat              =</span> fap ,</span>
-<span id="cb86-30"><a href="#cb86-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">satfat             =</span> fas ,</span>
-<span id="cb86-31"><a href="#cb86-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">freesugars         =</span> fsug,</span>
-<span id="cb86-32"><a href="#cb86-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">sodium             =</span> sod,</span>
-<span id="cb86-33"><a href="#cb86-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">energy             =</span> ekc</span>
-<span id="cb86-34"><a href="#cb86-34" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Calculate HEFI-2019 scores ####</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a><span class="co">#           Calculate HEFI-2019 scores           #</span></span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the hefi-2019 scoring algorithm</span></span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb88-8"><a href="#cb88-8" aria-hidden="true" tabindex="-1"></a>dietsim_hefi <span class="ot">&lt;-</span></span>
+<span id="cb88-9"><a href="#cb88-9" aria-hidden="true" tabindex="-1"></a>  dietsim <span class="sc">|&gt;</span></span>
+<span id="cb88-10"><a href="#cb88-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb88-11"><a href="#cb88-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Change milk_plantbev RA to grams</span></span>
+<span id="cb88-12"><a href="#cb88-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">milk_plantbev =</span> milk_plantbev<span class="sc">*</span><span class="dv">258</span>,</span>
+<span id="cb88-13"><a href="#cb88-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Without further information for milk_plantbev = split half/half</span></span>
+<span id="cb88-14"><a href="#cb88-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">milk =</span> milk_plantbev<span class="sc">/</span><span class="dv">2</span>,</span>
+<span id="cb88-15"><a href="#cb88-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">plantbev =</span> milk_plantbev<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb88-16"><a href="#cb88-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb88-17"><a href="#cb88-17" aria-hidden="true" tabindex="-1"></a>  hefi2019<span class="sc">::</span><span class="fu">hefi2019</span>(<span class="co">#indata      = dietsim,</span></span>
+<span id="cb88-18"><a href="#cb88-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">vegfruits          =</span> vf,</span>
+<span id="cb88-19"><a href="#cb88-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">wholegrfoods       =</span> wg,</span>
+<span id="cb88-20"><a href="#cb88-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">nonwholegrfoods    =</span> <span class="dv">0</span>,</span>
+<span id="cb88-21"><a href="#cb88-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">profoodsanimal     =</span> pfab,</span>
+<span id="cb88-22"><a href="#cb88-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">profoodsplant      =</span> pfpb,</span>
+<span id="cb88-23"><a href="#cb88-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">otherfoods         =</span> <span class="dv">0</span>,</span>
+<span id="cb88-24"><a href="#cb88-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">waterhealthybev    =</span> <span class="dv">0</span>,</span>
+<span id="cb88-25"><a href="#cb88-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">unsweetmilk        =</span> milk,</span>
+<span id="cb88-26"><a href="#cb88-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">unsweetplantbevpro =</span> plantbev,</span>
+<span id="cb88-27"><a href="#cb88-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">otherbeverages     =</span> <span class="dv">0</span> ,</span>
+<span id="cb88-28"><a href="#cb88-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">mufat              =</span> fam ,</span>
+<span id="cb88-29"><a href="#cb88-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">pufat              =</span> fap ,</span>
+<span id="cb88-30"><a href="#cb88-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">satfat             =</span> fas ,</span>
+<span id="cb88-31"><a href="#cb88-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">freesugars         =</span> fsug,</span>
+<span id="cb88-32"><a href="#cb88-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">sodium             =</span> sod,</span>
+<span id="cb88-33"><a href="#cb88-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">energy             =</span> ekc</span>
+<span id="cb88-34"><a href="#cb88-34" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Healthy Eating Food Index-2019 Scoring Algorithm R version 1.4</code></pre>
 </div>
@@ -1106,63 +1108,63 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
         new variable 'milk' (double) with one unique value and 0% NA
         new variable 'plantbev' (double) with one unique value and 0% NA</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
-<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="co">#         Add labels         #</span></span>
-<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
-<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>labelled<span class="sc">::</span><span class="fu">var_label</span>(dietsim_hefi) <span class="ot">&lt;-</span></span>
-<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
-<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">drig          =</span> <span class="st">"DRI age and sex group"</span>,</span>
-<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">drig_f        =</span> <span class="st">"DRI age and sex group"</span>,</span>
-<span id="cb89-9"><a href="#cb89-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">vf            =</span> <span class="st">"Vegetables and fruits, RA/d"</span>,</span>
-<span id="cb89-10"><a href="#cb89-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">wg            =</span> <span class="st">"Whole-grain foods, RA/d"</span>,</span>
-<span id="cb89-11"><a href="#cb89-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">pfpb          =</span> <span class="st">"Protein foods, plant-based, RA/d"</span>,</span>
-<span id="cb89-12"><a href="#cb89-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">pfab          =</span> <span class="st">"Protein foods, animal-based, RA/d"</span>,</span>
-<span id="cb89-13"><a href="#cb89-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">milk_plantbev =</span> <span class="st">"Unsweetened milk and plant beverage with protein, RA/d"</span>,</span>
-<span id="cb89-14"><a href="#cb89-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">ufa           =</span> <span class="st">"Unsaturated fats, RA/d"</span>,</span>
-<span id="cb89-15"><a href="#cb89-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">ekc           =</span> <span class="st">"Total energy intake, kcal/d"</span>,</span>
-<span id="cb89-16"><a href="#cb89-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">fsug          =</span> <span class="st">"Free sugars, grams/d"</span>,</span>
-<span id="cb89-17"><a href="#cb89-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">fas           =</span> <span class="st">"Saturated fats, grams/d"</span>,</span>
-<span id="cb89-18"><a href="#cb89-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">fam           =</span> <span class="st">"Monounsaturated fats, grams/d"</span>,</span>
-<span id="cb89-19"><a href="#cb89-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">fap           =</span> <span class="st">"Polyunsaturated fats, grams/d"</span>,</span>
-<span id="cb89-20"><a href="#cb89-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">sod           =</span> <span class="st">"Sodium, mg/d"</span>,</span>
-<span id="cb89-21"><a href="#cb89-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">pro           =</span> <span class="st">"Protein, grams/d"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="co">#         Add labels         #</span></span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ************************** #</span></span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a>labelled<span class="sc">::</span><span class="fu">var_label</span>(dietsim_hefi) <span class="ot">&lt;-</span></span>
+<span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">drig          =</span> <span class="st">"DRI age and sex group"</span>,</span>
+<span id="cb91-8"><a href="#cb91-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">drig_f        =</span> <span class="st">"DRI age and sex group"</span>,</span>
+<span id="cb91-9"><a href="#cb91-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">vf            =</span> <span class="st">"Vegetables and fruits, RA/d"</span>,</span>
+<span id="cb91-10"><a href="#cb91-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">wg            =</span> <span class="st">"Whole-grain foods, RA/d"</span>,</span>
+<span id="cb91-11"><a href="#cb91-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">pfpb          =</span> <span class="st">"Protein foods, plant-based, RA/d"</span>,</span>
+<span id="cb91-12"><a href="#cb91-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">pfab          =</span> <span class="st">"Protein foods, animal-based, RA/d"</span>,</span>
+<span id="cb91-13"><a href="#cb91-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">milk_plantbev =</span> <span class="st">"Unsweetened milk and plant beverage with protein, RA/d"</span>,</span>
+<span id="cb91-14"><a href="#cb91-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">ufa           =</span> <span class="st">"Unsaturated fats, RA/d"</span>,</span>
+<span id="cb91-15"><a href="#cb91-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">ekc           =</span> <span class="st">"Total energy intake, kcal/d"</span>,</span>
+<span id="cb91-16"><a href="#cb91-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">fsug          =</span> <span class="st">"Free sugars, grams/d"</span>,</span>
+<span id="cb91-17"><a href="#cb91-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">fas           =</span> <span class="st">"Saturated fats, grams/d"</span>,</span>
+<span id="cb91-18"><a href="#cb91-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">fam           =</span> <span class="st">"Monounsaturated fats, grams/d"</span>,</span>
+<span id="cb91-19"><a href="#cb91-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">fap           =</span> <span class="st">"Polyunsaturated fats, grams/d"</span>,</span>
+<span id="cb91-20"><a href="#cb91-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">sod           =</span> <span class="st">"Sodium, mg/d"</span>,</span>
+<span id="cb91-21"><a href="#cb91-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">pro           =</span> <span class="st">"Protein, grams/d"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Summary and save ####</span></span>
-<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                Summary and save                #</span></span>
-<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
-<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a><span class="co"># summary</span></span>
-<span id="cb90-7"><a href="#cb90-7" aria-hidden="true" tabindex="-1"></a>dietsim <span class="sc">|&gt;</span></span>
-<span id="cb90-8"><a href="#cb90-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="st">"drig"</span>, <span class="st">"ekc"</span><span class="sc">:</span><span class="st">"pro"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb90-9"><a href="#cb90-9" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
-<span id="cb90-10"><a href="#cb90-10" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_move_to_start</span>(<span class="st">"drig_f"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb90-11"><a href="#cb90-11" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">everything</span>(), <span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
-<span id="cb90-12"><a href="#cb90-12" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_header</span>(<span class="st">"Intakes of major food categories in Health Canada simulated diets, by DRI group"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb90-13"><a href="#cb90-13" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_source_note</span>(<span class="at">source_note =</span> <span class="st">"Data from Health Canada. (2022). Simulated composite diets. Available at https://open.canada.ca/data/dataset/0490749d-b0b0-410a-9577-a903c6cec2be"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Summary and save ####</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                Summary and save                #</span></span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ********************************************** #</span></span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a><span class="co"># summary</span></span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>dietsim <span class="sc">|&gt;</span></span>
+<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="st">"drig"</span>, <span class="st">"ekc"</span><span class="sc">:</span><span class="st">"pro"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb92-9"><a href="#cb92-9" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb92-10"><a href="#cb92-10" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_move_to_start</span>(<span class="st">"drig_f"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb92-11"><a href="#cb92-11" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">everything</span>(), <span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb92-12"><a href="#cb92-12" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_header</span>(<span class="st">"Intakes of major food categories in Health Canada simulated diets, by DRI group"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb92-13"><a href="#cb92-13" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_source_note</span>(<span class="at">source_note =</span> <span class="st">"Data from Health Canada. (2022). Simulated composite diets. Available at https://open.canada.ca/data/dataset/0490749d-b0b0-410a-9577-a903c6cec2be"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>select: dropped 8 variables (drig, ekc, fsug, fas, fam, …)</code></pre>
 </div>
 <div class="cell-output-display">
-<div id="bxzjfeuwyp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#bxzjfeuwyp table {
+<div id="yymxuzlree" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#yymxuzlree table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#bxzjfeuwyp thead, #bxzjfeuwyp tbody, #bxzjfeuwyp tfoot, #bxzjfeuwyp tr, #bxzjfeuwyp td, #bxzjfeuwyp th {
+#yymxuzlree thead, #yymxuzlree tbody, #yymxuzlree tfoot, #yymxuzlree tr, #yymxuzlree td, #yymxuzlree th {
   border-style: none;
 }
 
-#bxzjfeuwyp p {
+#yymxuzlree p {
   margin: 0;
   padding: 0;
 }
 
-#bxzjfeuwyp .gt_table {
+#yymxuzlree .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1188,12 +1190,12 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-left-color: #D3D3D3;
 }
 
-#bxzjfeuwyp .gt_caption {
+#yymxuzlree .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#bxzjfeuwyp .gt_title {
+#yymxuzlree .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1205,7 +1207,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-bottom-width: 0;
 }
 
-#bxzjfeuwyp .gt_subtitle {
+#yymxuzlree .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1217,7 +1219,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-top-width: 0;
 }
 
-#bxzjfeuwyp .gt_heading {
+#yymxuzlree .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1229,13 +1231,13 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-right-color: #D3D3D3;
 }
 
-#bxzjfeuwyp .gt_bottom_border {
+#yymxuzlree .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#bxzjfeuwyp .gt_col_headings {
+#yymxuzlree .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1250,7 +1252,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-right-color: #D3D3D3;
 }
 
-#bxzjfeuwyp .gt_col_heading {
+#yymxuzlree .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1270,7 +1272,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   overflow-x: hidden;
 }
 
-#bxzjfeuwyp .gt_column_spanner_outer {
+#yymxuzlree .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1282,15 +1284,15 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 4px;
 }
 
-#bxzjfeuwyp .gt_column_spanner_outer:first-child {
+#yymxuzlree .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#bxzjfeuwyp .gt_column_spanner_outer:last-child {
+#yymxuzlree .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#bxzjfeuwyp .gt_column_spanner {
+#yymxuzlree .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1302,11 +1304,11 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   width: 100%;
 }
 
-#bxzjfeuwyp .gt_spanner_row {
+#yymxuzlree .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#bxzjfeuwyp .gt_group_heading {
+#yymxuzlree .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1332,7 +1334,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   text-align: left;
 }
 
-#bxzjfeuwyp .gt_empty_group_heading {
+#yymxuzlree .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1347,15 +1349,15 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   vertical-align: middle;
 }
 
-#bxzjfeuwyp .gt_from_md > :first-child {
+#yymxuzlree .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#bxzjfeuwyp .gt_from_md > :last-child {
+#yymxuzlree .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#bxzjfeuwyp .gt_row {
+#yymxuzlree .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1374,7 +1376,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   overflow-x: hidden;
 }
 
-#bxzjfeuwyp .gt_stub {
+#yymxuzlree .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1387,7 +1389,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#bxzjfeuwyp .gt_stub_row_group {
+#yymxuzlree .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1401,15 +1403,15 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   vertical-align: top;
 }
 
-#bxzjfeuwyp .gt_row_group_first td {
+#yymxuzlree .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#bxzjfeuwyp .gt_row_group_first th {
+#yymxuzlree .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#bxzjfeuwyp .gt_summary_row {
+#yymxuzlree .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1419,16 +1421,16 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#bxzjfeuwyp .gt_first_summary_row {
+#yymxuzlree .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#bxzjfeuwyp .gt_first_summary_row.thick {
+#yymxuzlree .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#bxzjfeuwyp .gt_last_summary_row {
+#yymxuzlree .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1438,7 +1440,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-bottom-color: #D3D3D3;
 }
 
-#bxzjfeuwyp .gt_grand_summary_row {
+#yymxuzlree .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1448,7 +1450,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#bxzjfeuwyp .gt_first_grand_summary_row {
+#yymxuzlree .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1458,7 +1460,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-top-color: #D3D3D3;
 }
 
-#bxzjfeuwyp .gt_last_grand_summary_row_top {
+#yymxuzlree .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1468,11 +1470,11 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-bottom-color: #D3D3D3;
 }
 
-#bxzjfeuwyp .gt_striped {
+#yymxuzlree .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#bxzjfeuwyp .gt_table_body {
+#yymxuzlree .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1481,7 +1483,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-bottom-color: #D3D3D3;
 }
 
-#bxzjfeuwyp .gt_footnotes {
+#yymxuzlree .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1495,7 +1497,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-right-color: #D3D3D3;
 }
 
-#bxzjfeuwyp .gt_footnote {
+#yymxuzlree .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1504,7 +1506,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#bxzjfeuwyp .gt_sourcenotes {
+#yymxuzlree .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1518,7 +1520,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-right-color: #D3D3D3;
 }
 
-#bxzjfeuwyp .gt_sourcenote {
+#yymxuzlree .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1526,64 +1528,73 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#bxzjfeuwyp .gt_left {
+#yymxuzlree .gt_left {
   text-align: left;
 }
 
-#bxzjfeuwyp .gt_center {
+#yymxuzlree .gt_center {
   text-align: center;
 }
 
-#bxzjfeuwyp .gt_right {
+#yymxuzlree .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#bxzjfeuwyp .gt_font_normal {
+#yymxuzlree .gt_font_normal {
   font-weight: normal;
 }
 
-#bxzjfeuwyp .gt_font_bold {
+#yymxuzlree .gt_font_bold {
   font-weight: bold;
 }
 
-#bxzjfeuwyp .gt_font_italic {
+#yymxuzlree .gt_font_italic {
   font-style: italic;
 }
 
-#bxzjfeuwyp .gt_super {
+#yymxuzlree .gt_super {
   font-size: 65%;
 }
 
-#bxzjfeuwyp .gt_footnote_marks {
+#yymxuzlree .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#bxzjfeuwyp .gt_asterisk {
+#yymxuzlree .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#bxzjfeuwyp .gt_indent_1 {
+#yymxuzlree .gt_indent_1 {
   text-indent: 5px;
 }
 
-#bxzjfeuwyp .gt_indent_2 {
+#yymxuzlree .gt_indent_2 {
   text-indent: 10px;
 }
 
-#bxzjfeuwyp .gt_indent_3 {
+#yymxuzlree .gt_indent_3 {
   text-indent: 15px;
 }
 
-#bxzjfeuwyp .gt_indent_4 {
+#yymxuzlree .gt_indent_4 {
   text-indent: 20px;
 }
 
-#bxzjfeuwyp .gt_indent_5 {
+#yymxuzlree .gt_indent_5 {
   text-indent: 25px;
+}
+
+#yymxuzlree .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#yymxuzlree div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
@@ -1593,13 +1604,13 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
 <th colspan="7" class="gt_heading gt_title gt_font_normal gt_bottom_border">Intakes of major food categories in Health Canada simulated diets, by DRI group</th>
 </tr>
 <tr class="odd gt_col_headings">
-<th id="DRI age and sex group" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">DRI age and sex group</th>
-<th id="Vegetables and fruits, RA/d" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Vegetables and fruits, RA/d</th>
-<th id="Whole-grain foods, RA/d" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Whole-grain foods, RA/d</th>
-<th id="Protein foods, plant-based, RA/d" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Protein foods, plant-based, RA/d</th>
-<th id="Protein foods, animal-based, RA/d" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Protein foods, animal-based, RA/d</th>
-<th id="Unsweetened milk and plant beverage with protein, RA/d" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Unsweetened milk and plant beverage with protein, RA/d</th>
-<th id="Unsaturated fats, RA/d" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Unsaturated fats, RA/d</th>
+<th id="drig_f" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">DRI age and sex group</th>
+<th id="vf" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Vegetables and fruits, RA/d</th>
+<th id="wg" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Whole-grain foods, RA/d</th>
+<th id="pfpb" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Protein foods, plant-based, RA/d</th>
+<th id="pfab" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Protein foods, animal-based, RA/d</th>
+<th id="milk_plantbev" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Unsweetened milk and plant beverage with protein, RA/d</th>
+<th id="ufa" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Unsaturated fats, RA/d</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
@@ -1658,34 +1669,34 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
 
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>dietsim <span class="sc">|&gt;</span></span>
-<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">"drig_f"</span>, <span class="st">"ekc"</span><span class="sc">:</span><span class="st">"pro"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
-<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_move_to_start</span>(<span class="st">"drig_f"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">everything</span>(), <span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
-<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_header</span>(<span class="st">"Intakes of major nutrients in Health Canada simulated diets, by DRI group"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_source_note</span>(<span class="at">source_note =</span> <span class="st">"Data from Health Canada. (2022). Simulated composite diets. Available at https://open.canada.ca/data/dataset/0490749d-b0b0-410a-9577-a903c6cec2be"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>dietsim <span class="sc">|&gt;</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">"drig_f"</span>, <span class="st">"ekc"</span><span class="sc">:</span><span class="st">"pro"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_move_to_start</span>(<span class="st">"drig_f"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">everything</span>(), <span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_header</span>(<span class="st">"Intakes of major nutrients in Health Canada simulated diets, by DRI group"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_source_note</span>(<span class="at">source_note =</span> <span class="st">"Data from Health Canada. (2022). Simulated composite diets. Available at https://open.canada.ca/data/dataset/0490749d-b0b0-410a-9577-a903c6cec2be"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>select: dropped 7 variables (drig, vf, wg, pfpb, pfab, …)</code></pre>
 </div>
 <div class="cell-output-display">
-<div id="urztkmdgjk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#urztkmdgjk table {
+<div id="hgqvfetbra" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hgqvfetbra table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#urztkmdgjk thead, #urztkmdgjk tbody, #urztkmdgjk tfoot, #urztkmdgjk tr, #urztkmdgjk td, #urztkmdgjk th {
+#hgqvfetbra thead, #hgqvfetbra tbody, #hgqvfetbra tfoot, #hgqvfetbra tr, #hgqvfetbra td, #hgqvfetbra th {
   border-style: none;
 }
 
-#urztkmdgjk p {
+#hgqvfetbra p {
   margin: 0;
   padding: 0;
 }
 
-#urztkmdgjk .gt_table {
+#hgqvfetbra .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1711,12 +1722,12 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-left-color: #D3D3D3;
 }
 
-#urztkmdgjk .gt_caption {
+#hgqvfetbra .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#urztkmdgjk .gt_title {
+#hgqvfetbra .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1728,7 +1739,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-bottom-width: 0;
 }
 
-#urztkmdgjk .gt_subtitle {
+#hgqvfetbra .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1740,7 +1751,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-top-width: 0;
 }
 
-#urztkmdgjk .gt_heading {
+#hgqvfetbra .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1752,13 +1763,13 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-right-color: #D3D3D3;
 }
 
-#urztkmdgjk .gt_bottom_border {
+#hgqvfetbra .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#urztkmdgjk .gt_col_headings {
+#hgqvfetbra .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1773,7 +1784,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-right-color: #D3D3D3;
 }
 
-#urztkmdgjk .gt_col_heading {
+#hgqvfetbra .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1793,7 +1804,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   overflow-x: hidden;
 }
 
-#urztkmdgjk .gt_column_spanner_outer {
+#hgqvfetbra .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1805,15 +1816,15 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 4px;
 }
 
-#urztkmdgjk .gt_column_spanner_outer:first-child {
+#hgqvfetbra .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#urztkmdgjk .gt_column_spanner_outer:last-child {
+#hgqvfetbra .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#urztkmdgjk .gt_column_spanner {
+#hgqvfetbra .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1825,11 +1836,11 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   width: 100%;
 }
 
-#urztkmdgjk .gt_spanner_row {
+#hgqvfetbra .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#urztkmdgjk .gt_group_heading {
+#hgqvfetbra .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1855,7 +1866,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   text-align: left;
 }
 
-#urztkmdgjk .gt_empty_group_heading {
+#hgqvfetbra .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1870,15 +1881,15 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   vertical-align: middle;
 }
 
-#urztkmdgjk .gt_from_md > :first-child {
+#hgqvfetbra .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#urztkmdgjk .gt_from_md > :last-child {
+#hgqvfetbra .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#urztkmdgjk .gt_row {
+#hgqvfetbra .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1897,7 +1908,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   overflow-x: hidden;
 }
 
-#urztkmdgjk .gt_stub {
+#hgqvfetbra .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1910,7 +1921,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#urztkmdgjk .gt_stub_row_group {
+#hgqvfetbra .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1924,15 +1935,15 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   vertical-align: top;
 }
 
-#urztkmdgjk .gt_row_group_first td {
+#hgqvfetbra .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#urztkmdgjk .gt_row_group_first th {
+#hgqvfetbra .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#urztkmdgjk .gt_summary_row {
+#hgqvfetbra .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1942,16 +1953,16 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#urztkmdgjk .gt_first_summary_row {
+#hgqvfetbra .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#urztkmdgjk .gt_first_summary_row.thick {
+#hgqvfetbra .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#urztkmdgjk .gt_last_summary_row {
+#hgqvfetbra .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1961,7 +1972,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-bottom-color: #D3D3D3;
 }
 
-#urztkmdgjk .gt_grand_summary_row {
+#hgqvfetbra .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1971,7 +1982,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#urztkmdgjk .gt_first_grand_summary_row {
+#hgqvfetbra .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1981,7 +1992,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-top-color: #D3D3D3;
 }
 
-#urztkmdgjk .gt_last_grand_summary_row_top {
+#hgqvfetbra .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1991,11 +2002,11 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-bottom-color: #D3D3D3;
 }
 
-#urztkmdgjk .gt_striped {
+#hgqvfetbra .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#urztkmdgjk .gt_table_body {
+#hgqvfetbra .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2004,7 +2015,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-bottom-color: #D3D3D3;
 }
 
-#urztkmdgjk .gt_footnotes {
+#hgqvfetbra .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2018,7 +2029,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-right-color: #D3D3D3;
 }
 
-#urztkmdgjk .gt_footnote {
+#hgqvfetbra .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2027,7 +2038,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#urztkmdgjk .gt_sourcenotes {
+#hgqvfetbra .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2041,7 +2052,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-right-color: #D3D3D3;
 }
 
-#urztkmdgjk .gt_sourcenote {
+#hgqvfetbra .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2049,64 +2060,73 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#urztkmdgjk .gt_left {
+#hgqvfetbra .gt_left {
   text-align: left;
 }
 
-#urztkmdgjk .gt_center {
+#hgqvfetbra .gt_center {
   text-align: center;
 }
 
-#urztkmdgjk .gt_right {
+#hgqvfetbra .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#urztkmdgjk .gt_font_normal {
+#hgqvfetbra .gt_font_normal {
   font-weight: normal;
 }
 
-#urztkmdgjk .gt_font_bold {
+#hgqvfetbra .gt_font_bold {
   font-weight: bold;
 }
 
-#urztkmdgjk .gt_font_italic {
+#hgqvfetbra .gt_font_italic {
   font-style: italic;
 }
 
-#urztkmdgjk .gt_super {
+#hgqvfetbra .gt_super {
   font-size: 65%;
 }
 
-#urztkmdgjk .gt_footnote_marks {
+#hgqvfetbra .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#urztkmdgjk .gt_asterisk {
+#hgqvfetbra .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#urztkmdgjk .gt_indent_1 {
+#hgqvfetbra .gt_indent_1 {
   text-indent: 5px;
 }
 
-#urztkmdgjk .gt_indent_2 {
+#hgqvfetbra .gt_indent_2 {
   text-indent: 10px;
 }
 
-#urztkmdgjk .gt_indent_3 {
+#hgqvfetbra .gt_indent_3 {
   text-indent: 15px;
 }
 
-#urztkmdgjk .gt_indent_4 {
+#hgqvfetbra .gt_indent_4 {
   text-indent: 20px;
 }
 
-#urztkmdgjk .gt_indent_5 {
+#hgqvfetbra .gt_indent_5 {
   text-indent: 25px;
+}
+
+#hgqvfetbra .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#hgqvfetbra div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
@@ -2116,14 +2136,14 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
 <th colspan="8" class="gt_heading gt_title gt_font_normal gt_bottom_border">Intakes of major nutrients in Health Canada simulated diets, by DRI group</th>
 </tr>
 <tr class="odd gt_col_headings">
-<th id="DRI age and sex group" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">DRI age and sex group</th>
-<th id="Total energy intake, kcal/d" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Total energy intake, kcal/d</th>
-<th id="Free sugars, grams/d" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Free sugars, grams/d</th>
-<th id="Saturated fats, grams/d" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Saturated fats, grams/d</th>
-<th id="Monounsaturated fats, grams/d" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Monounsaturated fats, grams/d</th>
-<th id="Polyunsaturated fats, grams/d" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Polyunsaturated fats, grams/d</th>
-<th id="Sodium, mg/d" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Sodium, mg/d</th>
-<th id="Protein, grams/d" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Protein, grams/d</th>
+<th id="drig_f" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">DRI age and sex group</th>
+<th id="ekc" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Total energy intake, kcal/d</th>
+<th id="fsug" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Free sugars, grams/d</th>
+<th id="fas" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Saturated fats, grams/d</th>
+<th id="fam" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Monounsaturated fats, grams/d</th>
+<th id="fap" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Polyunsaturated fats, grams/d</th>
+<th id="sod" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Sodium, mg/d</th>
+<th id="pro" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Protein, grams/d</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
@@ -2187,33 +2207,33 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
 
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>dietsim_hefi <span class="sc">|&gt;</span></span>
-<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"HEFI2019"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
-<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">everything</span>(), <span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
-<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_header</span>(<span class="st">"HEFI-2019 scores of Health Canada simulated diets, by DRI group"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_source_note</span>(<span class="at">source_note =</span> <span class="st">"Based on data from Health Canada. (2022). Simulated composite diets. Available at https://open.canada.ca/data/dataset/0490749d-b0b0-410a-9577-a903c6cec2be"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>dietsim_hefi <span class="sc">|&gt;</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"HEFI2019"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">everything</span>(), <span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_header</span>(<span class="st">"HEFI-2019 scores of Health Canada simulated diets, by DRI group"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_source_note</span>(<span class="at">source_note =</span> <span class="st">"Based on data from Health Canada. (2022). Simulated composite diets. Available at https://open.canada.ca/data/dataset/0490749d-b0b0-410a-9577-a903c6cec2be"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>select: dropped 28 variables (drig, vf, wg, pfpb, pfab, …)</code></pre>
 </div>
 <div class="cell-output-display">
-<div id="sbvmkfkiqt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#sbvmkfkiqt table {
+<div id="xodzwzoqlf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xodzwzoqlf table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#sbvmkfkiqt thead, #sbvmkfkiqt tbody, #sbvmkfkiqt tfoot, #sbvmkfkiqt tr, #sbvmkfkiqt td, #sbvmkfkiqt th {
+#xodzwzoqlf thead, #xodzwzoqlf tbody, #xodzwzoqlf tfoot, #xodzwzoqlf tr, #xodzwzoqlf td, #xodzwzoqlf th {
   border-style: none;
 }
 
-#sbvmkfkiqt p {
+#xodzwzoqlf p {
   margin: 0;
   padding: 0;
 }
 
-#sbvmkfkiqt .gt_table {
+#xodzwzoqlf .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2239,12 +2259,12 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-left-color: #D3D3D3;
 }
 
-#sbvmkfkiqt .gt_caption {
+#xodzwzoqlf .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#sbvmkfkiqt .gt_title {
+#xodzwzoqlf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2256,7 +2276,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-bottom-width: 0;
 }
 
-#sbvmkfkiqt .gt_subtitle {
+#xodzwzoqlf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2268,7 +2288,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-top-width: 0;
 }
 
-#sbvmkfkiqt .gt_heading {
+#xodzwzoqlf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2280,13 +2300,13 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-right-color: #D3D3D3;
 }
 
-#sbvmkfkiqt .gt_bottom_border {
+#xodzwzoqlf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#sbvmkfkiqt .gt_col_headings {
+#xodzwzoqlf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2301,7 +2321,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-right-color: #D3D3D3;
 }
 
-#sbvmkfkiqt .gt_col_heading {
+#xodzwzoqlf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2321,7 +2341,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   overflow-x: hidden;
 }
 
-#sbvmkfkiqt .gt_column_spanner_outer {
+#xodzwzoqlf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2333,15 +2353,15 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 4px;
 }
 
-#sbvmkfkiqt .gt_column_spanner_outer:first-child {
+#xodzwzoqlf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#sbvmkfkiqt .gt_column_spanner_outer:last-child {
+#xodzwzoqlf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#sbvmkfkiqt .gt_column_spanner {
+#xodzwzoqlf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2353,11 +2373,11 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   width: 100%;
 }
 
-#sbvmkfkiqt .gt_spanner_row {
+#xodzwzoqlf .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#sbvmkfkiqt .gt_group_heading {
+#xodzwzoqlf .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2383,7 +2403,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   text-align: left;
 }
 
-#sbvmkfkiqt .gt_empty_group_heading {
+#xodzwzoqlf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2398,15 +2418,15 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   vertical-align: middle;
 }
 
-#sbvmkfkiqt .gt_from_md > :first-child {
+#xodzwzoqlf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#sbvmkfkiqt .gt_from_md > :last-child {
+#xodzwzoqlf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#sbvmkfkiqt .gt_row {
+#xodzwzoqlf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2425,7 +2445,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   overflow-x: hidden;
 }
 
-#sbvmkfkiqt .gt_stub {
+#xodzwzoqlf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2438,7 +2458,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#sbvmkfkiqt .gt_stub_row_group {
+#xodzwzoqlf .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2452,15 +2472,15 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   vertical-align: top;
 }
 
-#sbvmkfkiqt .gt_row_group_first td {
+#xodzwzoqlf .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#sbvmkfkiqt .gt_row_group_first th {
+#xodzwzoqlf .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#sbvmkfkiqt .gt_summary_row {
+#xodzwzoqlf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2470,16 +2490,16 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#sbvmkfkiqt .gt_first_summary_row {
+#xodzwzoqlf .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#sbvmkfkiqt .gt_first_summary_row.thick {
+#xodzwzoqlf .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#sbvmkfkiqt .gt_last_summary_row {
+#xodzwzoqlf .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2489,7 +2509,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-bottom-color: #D3D3D3;
 }
 
-#sbvmkfkiqt .gt_grand_summary_row {
+#xodzwzoqlf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2499,7 +2519,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#sbvmkfkiqt .gt_first_grand_summary_row {
+#xodzwzoqlf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2509,7 +2529,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-top-color: #D3D3D3;
 }
 
-#sbvmkfkiqt .gt_last_grand_summary_row_top {
+#xodzwzoqlf .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2519,11 +2539,11 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-bottom-color: #D3D3D3;
 }
 
-#sbvmkfkiqt .gt_striped {
+#xodzwzoqlf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#sbvmkfkiqt .gt_table_body {
+#xodzwzoqlf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2532,7 +2552,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-bottom-color: #D3D3D3;
 }
 
-#sbvmkfkiqt .gt_footnotes {
+#xodzwzoqlf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2546,7 +2566,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-right-color: #D3D3D3;
 }
 
-#sbvmkfkiqt .gt_footnote {
+#xodzwzoqlf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2555,7 +2575,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#sbvmkfkiqt .gt_sourcenotes {
+#xodzwzoqlf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2569,7 +2589,7 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   border-right-color: #D3D3D3;
 }
 
-#sbvmkfkiqt .gt_sourcenote {
+#xodzwzoqlf .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2577,64 +2597,73 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
   padding-right: 5px;
 }
 
-#sbvmkfkiqt .gt_left {
+#xodzwzoqlf .gt_left {
   text-align: left;
 }
 
-#sbvmkfkiqt .gt_center {
+#xodzwzoqlf .gt_center {
   text-align: center;
 }
 
-#sbvmkfkiqt .gt_right {
+#xodzwzoqlf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#sbvmkfkiqt .gt_font_normal {
+#xodzwzoqlf .gt_font_normal {
   font-weight: normal;
 }
 
-#sbvmkfkiqt .gt_font_bold {
+#xodzwzoqlf .gt_font_bold {
   font-weight: bold;
 }
 
-#sbvmkfkiqt .gt_font_italic {
+#xodzwzoqlf .gt_font_italic {
   font-style: italic;
 }
 
-#sbvmkfkiqt .gt_super {
+#xodzwzoqlf .gt_super {
   font-size: 65%;
 }
 
-#sbvmkfkiqt .gt_footnote_marks {
+#xodzwzoqlf .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#sbvmkfkiqt .gt_asterisk {
+#xodzwzoqlf .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#sbvmkfkiqt .gt_indent_1 {
+#xodzwzoqlf .gt_indent_1 {
   text-indent: 5px;
 }
 
-#sbvmkfkiqt .gt_indent_2 {
+#xodzwzoqlf .gt_indent_2 {
   text-indent: 10px;
 }
 
-#sbvmkfkiqt .gt_indent_3 {
+#xodzwzoqlf .gt_indent_3 {
   text-indent: 15px;
 }
 
-#sbvmkfkiqt .gt_indent_4 {
+#xodzwzoqlf .gt_indent_4 {
   text-indent: 20px;
 }
 
-#sbvmkfkiqt .gt_indent_5 {
+#xodzwzoqlf .gt_indent_5 {
   text-indent: 25px;
+}
+
+#xodzwzoqlf .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#xodzwzoqlf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
@@ -2644,17 +2673,17 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
 <th colspan="11" class="gt_heading gt_title gt_font_normal gt_bottom_border">HEFI-2019 scores of Health Canada simulated diets, by DRI group</th>
 </tr>
 <tr class="odd gt_col_headings">
-<th id="HEFI2019 C1 Vegetables and fruits" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C1 Vegetables and fruits</th>
-<th id="HEFI2019 C2 Whole-grain foods" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C2 Whole-grain foods</th>
-<th id="HEFI2019 C3 Grain foods ratio" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C3 Grain foods ratio</th>
-<th id="HEFI2019 C4 Protein foods" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C4 Protein foods</th>
-<th id="HEFI2019 C5 Plant-based protein foods" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C5 Plant-based protein foods</th>
-<th id="HEFI2019 C6 Beverages" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C6 Beverages</th>
-<th id="HEFI2019 C7 Fatty acids ratio" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C7 Fatty acids ratio</th>
-<th id="HEFI2019 C8 Saturated fats" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C8 Saturated fats</th>
-<th id="HEFI2019 C9 Free sugars" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C9 Free sugars</th>
-<th id="HEFI2019 C10 Sodium" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C10 Sodium</th>
-<th id="Total Healthy Eating Food Index (/80)" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Total Healthy Eating Food Index (/80)</th>
+<th id="HEFI2019C1_VF" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C1 Vegetables and fruits</th>
+<th id="HEFI2019C2_WHOLEGR" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C2 Whole-grain foods</th>
+<th id="HEFI2019C3_GRRATIO" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C3 Grain foods ratio</th>
+<th id="HEFI2019C4_PROFOODS" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C4 Protein foods</th>
+<th id="HEFI2019C5_PLANTPRO" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C5 Plant-based protein foods</th>
+<th id="HEFI2019C6_BEVERAGES" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C6 Beverages</th>
+<th id="HEFI2019C7_FATTYACID" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C7 Fatty acids ratio</th>
+<th id="HEFI2019C8_SFAT" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C8 Saturated fats</th>
+<th id="HEFI2019C9_FREESUGARS" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C9 Free sugars</th>
+<th id="HEFI2019C10_SODIUM" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">HEFI2019 C10 Sodium</th>
+<th id="HEFI2019_TOTAL_SCORE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Total Healthy Eating Food Index (/80)</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
@@ -2733,33 +2762,38 @@ mutate: new variable 'drig' (double) with one unique value and 0% NA</code></pre
 
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save intake only</span></span>
-<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save_and_summarize_data</span>(</span>
-<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>  dietsim,</span>
-<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">dir =</span> dir_processed,</span>
-<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dir_metadata =</span> dir_metadata</span>
-<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Output file written: /Users/DidierBrassard/RStudio/NuAge_protocol/data/metadata/dietsim.html</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save intake + hefi</span></span>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save intake only</span></span>
 <span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save_and_summarize_data</span>(</span>
-<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>  dietsim_hefi,</span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>  dietsim,</span>
 <span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">dir =</span> dir_processed,</span>
 <span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dir_metadata =</span> dir_metadata</span>
 <span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
+<pre><code>Warning in fun(libname, pkgname): couldn't connect to display
+"/private/tmp/com.apple.launchd.6tu9LhZbap/org.xquartz:0"</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>system might not have X11 capabilities; in case of errors when using dfSummary(), set st_options(use.x11 = FALSE)
+Output file written: /Users/DidierBrassard/RStudio/NuAge_protocol/data/metadata/dietsim.html</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save intake + hefi</span></span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save_and_summarize_data</span>(</span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>  dietsim_hefi,</span>
+<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">dir =</span> dir_processed,</span>
+<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dir_metadata =</span> dir_metadata</span>
+<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
 <pre><code>Output file written: /Users/DidierBrassard/RStudio/NuAge_protocol/data/metadata/dietsim_hefi.html</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># *********************************************************************** #</span></span>
-<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                              End of code                                #</span></span>
-<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a><span class="co"># *********************************************************************** #</span></span>
-<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="co"># *********************************************************************** #</span></span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                              End of code                                #</span></span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a><span class="co"># *********************************************************************** #</span></span>
+<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.3.1 (2023-06-16)
 Platform: x86_64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.5
+Running under: macOS Sonoma 14.7.1
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRblas.0.dylib 
@@ -2775,25 +2809,25 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] summarytools_1.0.1 here_1.0.1         gt_0.10.1          hefi2019_0.0.1.4  
+[1] summarytools_1.0.1 here_1.0.1         gt_0.11.1          hefi2019_0.0.1.4  
 [5] janitor_2.2.0      readxl_1.4.3       tidylog_1.1.0      dplyr_1.1.4       
 
 loaded via a namespace (and not attached):
  [1] sass_0.4.9        utf8_1.2.4        generics_0.1.3    tidyr_1.3.1      
  [5] tcltk_4.3.1       xml2_1.3.6        stringi_1.8.4     rematch_2.0.0    
- [9] hms_1.1.3         digest_0.6.35     magrittr_2.0.3    evaluate_0.23    
+ [9] hms_1.1.3         digest_0.6.37     magrittr_2.0.3    evaluate_1.0.1   
 [13] timechange_0.3.0  fastmap_1.2.0     plyr_1.8.9        cellranger_1.1.0 
-[17] rprojroot_2.0.4   jsonlite_1.8.8    rapportools_1.1   backports_1.4.1  
+[17] rprojroot_2.0.4   jsonlite_1.8.9    rapportools_1.1   backports_1.5.0  
 [21] pander_0.6.5      purrr_1.0.2       fansi_1.0.6       codetools_0.2-20 
-[25] cli_3.6.2         labelled_2.13.0   rlang_1.1.3       base64enc_0.1-3  
-[29] withr_3.0.0       yaml_2.3.8        tools_4.3.1       reshape2_1.4.4   
-[33] pryr_0.1.6        checkmate_2.3.1   forcats_1.0.0     vctrs_0.6.5      
-[37] R6_2.5.1          matrixStats_1.3.0 magick_2.8.3      lifecycle_1.0.4  
+[25] cli_3.6.3         labelled_2.13.0   rlang_1.1.4       base64enc_0.1-3  
+[29] withr_3.0.2       yaml_2.3.10       tools_4.3.1       reshape2_1.4.4   
+[33] pryr_0.1.6        checkmate_2.3.2   forcats_1.0.0     vctrs_0.6.5      
+[37] R6_2.5.1          matrixStats_1.4.1 magick_2.8.5      lifecycle_1.0.4  
 [41] lubridate_1.9.3   snakecase_0.11.1  stringr_1.5.1     htmlwidgets_1.6.4
 [45] MASS_7.3-60.0.1   clisymbols_1.2.0  pkgconfig_2.0.3   pillar_1.9.0     
-[49] Rcpp_1.0.12       glue_1.7.0        haven_2.5.4       xfun_0.44        
-[53] tibble_3.2.1      tidyselect_1.2.1  rstudioapi_0.16.0 knitr_1.45       
-[57] htmltools_0.5.8.1 rmarkdown_2.27    compiler_4.3.1   </code></pre>
+[49] Rcpp_1.0.13-1     glue_1.8.0        haven_2.5.4       xfun_0.49        
+[53] tibble_3.2.1      tidyselect_1.2.1  rstudioapi_0.17.1 knitr_1.49       
+[57] htmltools_0.5.8.1 rmarkdown_2.29    compiler_4.3.1   </code></pre>
 </div>
 </div>
 
