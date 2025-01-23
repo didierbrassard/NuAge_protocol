@@ -579,7 +579,7 @@ dag_rand_unadjust_labels <-
     name =="X0"~"X\u2080",
     name =="L0" ~ "L\u2080",
     name =="Y"  ~ "Y",
-    name =="P-1" ~ "P\u208b\u2081",
+    name =="P-1" ~ "P",
     name == "Z" ~ "Z")
   ) |>
   dplyr::pull(label)
@@ -623,13 +623,13 @@ return(fig_dag_rand_unadjust)
 ## normal version
 fig_unadjust_normal <- 
   make_dag_rand_A(text_size=7) + 
-  labs(title="**A.** Confounding at baseline") + 
+  labs(title="**(A)** Confounding at baseline") + 
   theme(plot.title = ggtext::element_markdown())
 
 ## JMIR format
 fig_unadjust_jmir <- 
   make_dag_rand_A(scale_node_size=0.5, text_size=3.5) + 
-  labs(title="**A.** Confounding at baseline") + 
+  labs(title="**(A)** Confounding at baseline") + 
   theme(plot.title = ggtext::element_markdown(size=10))
 
 ## JMIR TOC figure
@@ -684,7 +684,7 @@ dag_rand_adjust_labels <-
     name =="X0"~"X\u2080",
     name =="L0" ~ "L\u2080",
     name =="Y"  ~ "Y",
-    name =="P-1" ~ "P\u208b\u2081",
+    name =="P-1" ~ "P",
     name == "Z" ~ "Z")
   ) |>
   dplyr::pull(label)
@@ -726,13 +726,13 @@ return(fig_dag_rand_adjust)
 ## normal version
 fig_adjust_normal <- 
   make_dag_rand_B(text_size=7) + 
-  labs(title="**B.** Successful emulation of randomization") +
+  labs(title="**(B)** Successful emulation of randomization") +
   theme(plot.title = ggtext::element_markdown())
 
 ## JMIR format
 fig_adjust_jmir <- 
   make_dag_rand_B(scale_node_size=0.5, text_size=3.5) + 
-  labs(title="**B.** Successful emulation of randomization") +
+  labs(title="**(B)** Successful emulation of randomization") +
   theme(plot.title = ggtext::element_markdown(size=10))
 
 # *********************************************************************** #
@@ -894,7 +894,7 @@ dag_one_t_labels <-
     name =="L0" ~ "L\u2080",
     name =="L1" ~ "L\u2081",
     name =="Y"  ~ "Y",
-    name =="P-1" ~ "P\u208b\u2081",
+    name =="P-1" ~ "P",
     name == "Z" ~ "Z")
   ) |>
   dplyr::pull(label)
@@ -919,8 +919,6 @@ fig_dag_one_t <-
   geom_dag_edges() +
   geom_dag_edges_arc(aes(xend=xend_arc,yend=yend_arc), curvature=0.25) +
   geom_dag_text(aes(label=dag_one_t_labels), size=text_size) +
-  labs(#title="Hypothesized relationship between diet, physical activity and outcome",
-       caption = "Arrows from Z to L, X, Y are not shown") +
   theme_dag() + 
   theme(
     plot.background = element_rect(colour="white")
