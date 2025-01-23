@@ -1,6 +1,6 @@
 # README
 Didier Brassard
-2024-12-04
+2025-01-23
 
 - [Introduction](#introduction)
 - [Quick links](#quick-links)
@@ -12,9 +12,9 @@ Didier Brassard
 # Introduction
 
 This repository includes the material to reproduce the manuscript of:
-*Estimating The Effect Of Adhering To Canada’s Food Guide 2019
-Recommendations On Health Outcomes In Older Adults: A Target Trial
-Emulation Protocol*
+*Estimating the Effect of Adhering to the Recommendations of the 2019
+Canada’s Food Guide on Health Outcomes in Older Adults: Protocol for a
+Target Trial Emulation*
 
 The raw data used for this project were obtained from [Health Canada
 (2022)](https://open.canada.ca/data/en/info/0490749d-b0b0-410a-9577-a903c6cec2be).
@@ -31,14 +31,14 @@ The raw data used for this project were obtained from [Health Canada
   material](https://didierbrassard.github.io/NuAge_protocol/9.2-Supplement.html)
 
 > \*Suggested citation: Brassard D, Presse N, Chevalier S. Estimating
-> The Effect Of Adhering To Canada’s Food Guide 2019 Recommendations On
-> Health Outcomes In Older Adults: A Target Trial Emulation Protocol.
-> JMIR Res Protoc (forthcoming).
+> the Effect of Adhering to the Recommendations of the 2019 Canada’s
+> Food Guide on Health Outcomes in Older Adults: Protocol for a Target
+> Trial Emulation. JMIR Res Protoc 2025;14:e65182.
 > [doi:10.2196/65182](http://dx.doi.org/10.2196/65182)
 
 # Codes
 
-<div id="kmjrgbfhsf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="jbygqjuoxb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
   &#10;  
 
 | Description of R and QMD codes |                                                                                 |        |                                                |
@@ -90,7 +90,7 @@ Open Government Portal.
 Expand for details
 </summary>
 
-    [1] "2024-12-04 12:40:36 EST"
+    [1] "2025-01-23 10:35:00 EST"
 
     R version 4.3.1 (2023-06-16)
     Platform: x86_64-apple-darwin20 (64-bit)
