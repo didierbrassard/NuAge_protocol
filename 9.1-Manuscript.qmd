@@ -1,5 +1,5 @@
 ---
-title: "Estimating The Effect Of Adhering To Canada’s Food Guide 2019 Recommendations On Health Outcomes In Older Adults: A Target Trial Emulation Protocol"
+title: "Estimating the Effect of Adhering to the Recommendations of the 2019 Canada’s Food Guide on Health Outcomes in Older Adults: Protocol for a Target Trial Emulation"
 subtitle: "Manuscript"
 author:
   - name: Didier Brassard
@@ -29,16 +29,14 @@ format: #docx
     toc: true
 reference-doc: manuscript/custom-ms.docx
 keywords: 
-  - older adults
-  - CFG
+  - aged
   - Canada’s Food Guide
-  - Dietary intervention
+  - Diet
   - Dietary guidelines
-  - Target trial
   - Target trial emulation
   - Hypothetical trial
-  - HEFI-2019
   - Healthy Eating Food Index-2019
+  - HEFI-2019
 knitr:
   opts_chunk: 
     echo: true
@@ -491,7 +489,7 @@ Covariates include age at baseline, biological sex, region, education, living al
 
 ```{r fig-dag-rand}
 #| label: fig-dag-rand
-#| fig-cap: "Causal directed acyclic graph (DAG) depicting confounding (A) and successful emulation of randomization using g methods (B) at baseline between the intervention strategy (X) and outcome (Y). Baseline covariates (both time-invariant [Z] and time-varying [L]) as well as prior diet and physical activity habits (P) must be considered to emulate randomization. The successful emulation of randomization of the lifestyle intervention strategy requires no unmeasured confounders and no residual confounding. Time-varying treatment and covariates are not shown in this DAG to focus on randomization emulation."
+#| fig-cap: "Causal directed acyclic graph (DAG) depicting (A) confounding and (B) successful emulation of randomization using g-methods at baseline between the intervention strategy (X) and outcome (Y). Baseline covariates (both time-invariant [Z] and time-varying [L]) and previous diet and physical activity habits (P) must be considered to emulate randomization. Time-varying treatment and covariates are not shown in this DAG to focus on randomization emulation. Subscripts indicate the time points, where 0 represents baseline."
 
 # ********************************************** #
 #           Input Dagitty information            #
@@ -821,7 +819,7 @@ In the context of this target trial emulation (@fig-dag-one-t), $P$ includes die
 
 ```{r fig-dag-one-t }
 #| label: fig-dag-one-t
-#| fig-cap: "Directed acyclic graph (DAG) depicting the hypothesized relationship among prior dietary exposure and time-varying interventions (diet, physical activity) and covariates. Arrows from the Z node are not shown for clarity, but would point towards all baseline and time-varying nodes, as well as outcome. Only one follow-up is shown for visualization purpose, but the hypothesized causal structure extends to additional follow-ups."
+#| fig-cap: "Directed acyclic graph (DAG) depicting the hypothesized relationship among previous dietary exposure, time-varying interventions (diet and physical activity), and covariates. Arrows from the Z node are not shown for clarity but would point toward all baseline and time-varying nodes, as well as the outcome. Only 1 follow-up is shown for visualization purposes, but the hypothesized causal structure extends to additional follow-ups. Subscripts indicate the time points, where 0 represents baseline and 1 represents time point 1."
 
 # ********************************************** #
 #           Input Dagitty information            #

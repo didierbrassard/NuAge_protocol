@@ -1,5 +1,5 @@
 ---
-title: "Estimating The Effect Of Adhering To Canada’s Food Guide 2019 Recommendations On Health Outcomes In Older Adults: A Target Trial Emulation Protocol"
+title: "Estimating the Effect of Adhering to the Recommendations of the 2019 Canada’s Food Guide on Health Outcomes in Older Adults: Protocol for a Target Trial Emulation"
 subtitle: "Supplemental Material" 
 author:
   - name: Didier Brassard
